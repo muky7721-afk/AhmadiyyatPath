@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#EEE8FA">
+<title>Tarbiyyat Path</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Cpath fill=%22%237C5CE6%22 d=%22M12 1l3.2 4.9 5.6-.8-.8 5.6L23 12l-3 1.3.8 5.6-5.6-.8L12 23l-3.2-4.9-5.6.8.8-5.6L1 12l3-1.3-.8-5.6 5.6.8z%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri&family=Fraunces:opsz,wght,SOFT@9..144,500..700,100&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: one soft column on a lilac ground; home = progress ring + a winding path of module stones; lesson = one focused card at a time. */
+:root{
+  --bg:#EEE8FA; --bg2:#E3D9F8; --card:#FFFFFF; --card2:#F8F4FF; --ink:#2B2140; --muted:#6E6488; --line:#E2D8F5;
+  --violet:#7C5CE6; --on-violet:#FFFFFF; --violet-soft:#E9E1FD;
+  --pink:#E0628F; --pink-soft:#FCE2EC; --mint:#26A37D; --mint-soft:#D7F2E8; --peach:#E5874A; --peach-soft:#FDE6D5; --gold:#E3A72A;
+  --shadow:0 10px 30px -12px rgba(91,60,170,.28); --shadow-s:0 4px 14px -6px rgba(91,60,170,.22);
+  --blob1:#D7C7FF; --blob2:#FFD3E6; --blob3:#CFF3E6;
+  --f-head:"Fraunces",Georgia,serif; --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif; --f-ar:"Amiri","Traditional Arabic",serif;
+  --r-l:28px; --r-m:20px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1A1328; --bg2:#231A37; --card:#2A2142; --card2:#31274D; --ink:#F1ECFF; --muted:#B5AAD2; --line:#3D3160;
+  --violet:#AB90FF; --on-violet:#1A1328; --violet-soft:#3A2D63;
+  --pink:#FF8FB8; --pink-soft:#4B2640; --mint:#5FD8B0; --mint-soft:#1D4038; --peach:#FFB17C; --peach-soft:#4A3022; --gold:#F5C55A;
+  --shadow:0 10px 30px -12px rgba(0,0,0,.6); --shadow-s:0 4px 14px -6px rgba(0,0,0,.5);
+  --blob1:#3B2A6E; --blob2:#4D2246; --blob3:#1D4A40; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1A1328; --bg2:#231A37; --card:#2A2142; --card2:#31274D; --ink:#F1ECFF; --muted:#B5AAD2; --line:#3D3160;
+  --violet:#AB90FF; --on-violet:#1A1328; --violet-soft:#3A2D63;
+  --pink:#FF8FB8; --pink-soft:#4B2640; --mint:#5FD8B0; --mint-soft:#1D4038; --peach:#FFB17C; --peach-soft:#4A3022; --gold:#F5C55A;
+  --shadow:0 10px 30px -12px rgba(0,0,0,.6); --shadow-s:0 4px 14px -6px rgba(0,0,0,.5);
+  --blob1:#3B2A6E; --blob2:#4D2246; --blob3:#1D4A40; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;padding-top:env(safe-area-inset-top,0px);background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 80px;overflow-x:hidden}
+.wrap{max-width:720px;margin:0 auto;position:relative;z-index:1}
+h1,h2,h3{font-family:var(--f-head);font-variation-settings:"SOFT" 100;font-weight:600;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+a{color:var(--violet);font-weight:700}
+sup{font-size:.6em;line-height:0;opacity:.8}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid var(--violet);outline-offset:3px;border-radius:12px}
+
+/* decorative background */
+.sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.75;animation:drift 22s ease-in-out infinite alternate}
+.blob.a{width:420px;height:420px;background:var(--blob1);top:-120px;left:-120px}
+.blob.b{width:360px;height:360px;background:var(--blob2);top:30%;right:-140px;animation-duration:26s}
+.blob.c{width:380px;height:380px;background:var(--blob3);bottom:-160px;left:20%;animation-duration:30s}
+@keyframes drift{to{transform:translate(60px,40px) scale(1.1)}}
+.star{position:absolute;color:var(--violet);opacity:.18;animation:twinkle 5s ease-in-out infinite}
+@keyframes twinkle{50%{opacity:.38;transform:rotate(22deg) scale(1.1)}}
+
+/* hero */
+.hero{padding-block:34px 18px;text-align:center;display:grid;gap:8px;justify-items:center}
+.bism{font-family:var(--f-ar);font-size:1.5rem;color:var(--violet);direction:rtl}
+.hero h1{font-size:clamp(2.4rem,8vw,3.4rem);line-height:1.05}
+.hero p{color:var(--muted);max-width:44ch}
+
+/* generic cards */
+.card{background:var(--card);border-radius:var(--r-l);box-shadow:var(--shadow);padding:22px}
+.soft{background:var(--card2);border-radius:var(--r-m);padding:16px 18px}
+.label{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.stack{display:grid;gap:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:999px;padding:14px 26px;font-weight:800;font-size:1.02rem;background:var(--violet);color:var(--on-violet);box-shadow:var(--shadow-s);transition:transform .15s,box-shadow .2s,filter .2s}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn:active{transform:scale(.96)}
+.btn.big{width:100%;padding:18px 26px;font-size:1.1rem}
+.btn.ghost{background:var(--violet-soft);color:var(--violet);box-shadow:none}
+.btn.pink{background:var(--pink);color:#fff}
+.btn:disabled{opacity:.5;cursor:default;transform:none}
+.link{all:unset;cursor:pointer;color:var(--violet);font-weight:800;display:inline-flex;gap:6px;align-items:center}
+.link:focus-visible{outline:3px solid var(--violet);outline-offset:3px;border-radius:8px}
+
+/* progress */
+.bar{height:12px;border-radius:99px;background:var(--violet-soft);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--pink));transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.bar.thin{height:8px}
+.home-top{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center}
+.ring{width:132px;height:132px;position:relative}
+.ring svg{transform:rotate(-90deg);width:100%;height:100%}
+.ring .track{stroke:var(--violet-soft)}
+.ring .fill{stroke:url(#grad);transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)}
+.ring .num{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1}
+.ring .num b{font-family:var(--f-head);font-size:2.1rem;font-weight:600}
+.ring .num span{display:block;font-size:.72rem;color:var(--muted);font-weight:700;margin-top:4px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border-radius:999px;padding:6px 12px;font-size:.84rem;font-weight:800;background:var(--violet-soft);color:var(--violet)}
+.chip.pink{background:var(--pink-soft);color:var(--pink)} .chip.mint{background:var(--mint-soft);color:var(--mint)} .chip.peach{background:var(--peach-soft);color:var(--peach)}
+@media (max-width:520px){.home-top{grid-template-columns:1fr;justify-items:center;text-align:center}.home-top .chips{justify-content:center}}
+
+/* journey path */
+.path{display:grid;gap:0;position:relative}
+.stone{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:center;padding:14px 0;position:relative}
+.stone:focus-visible{outline:3px solid var(--violet);outline-offset:4px;border-radius:24px}
+.stone:not(:last-child)::after{content:"";position:absolute;left:31px;top:76px;bottom:-14px;border-left:3px dotted var(--line)}
+.pebble{width:64px;height:64px;display:grid;place-items:center;font-family:var(--f-head);font-size:1.5rem;font-weight:600;color:#fff;
+  border-radius:42% 58% 63% 37% / 41% 44% 56% 59%;box-shadow:var(--shadow-s);transition:transform .3s,border-radius .6s;position:relative;z-index:1}
+.stone:hover .pebble{transform:rotate(-6deg) scale(1.06);border-radius:58% 42% 37% 63% / 56% 59% 41% 44%}
+.h-violet .pebble{background:var(--violet)} .h-pink .pebble{background:var(--pink)} .h-mint .pebble{background:var(--mint)} .h-peach .pebble{background:var(--peach)}
+.pebble.done{background:var(--gold)!important}
+.stone-body{background:var(--card);border-radius:var(--r-m);padding:14px 18px;box-shadow:var(--shadow-s);display:grid;gap:6px;min-width:0;transition:transform .25s}
+.stone:hover .stone-body{transform:translateX(4px)}
+.stone-body h3{font-size:1.18rem}
+.stone-body p{font-size:.92rem;color:var(--muted)}
+.stone-meta{display:flex;align-items:center;gap:10px;font-size:.82rem;font-weight:800;color:var(--muted)}
+.stone-meta .bar{flex:1}
+
+/* module header */
+.mhead{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+.lessons{display:grid;gap:10px}
+.lrow{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:40px 1fr auto;gap:14px;align-items:center;background:var(--card);border-radius:var(--r-m);padding:12px 16px;box-shadow:var(--shadow-s);transition:transform .2s}
+.lrow:hover{transform:translateY(-2px)}
+.lrow:focus-visible{outline:3px solid var(--violet);outline-offset:3px}
+.dot{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.9rem;background:var(--violet-soft);color:var(--violet)}
+.lrow.done .dot{background:var(--mint);color:#fff}
+.lrow.next{outline:2px dashed var(--violet);outline-offset:2px}
+.lrow .t{font-weight:700;line-height:1.3;min-width:0}
+.lrow .go{color:var(--muted);font-weight:800}
+
+/* lesson */
+.crumbs{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.lesson-title{font-size:clamp(1.8rem,6vw,2.4rem);line-height:1.12}
+.notes{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.notes li{display:grid;grid-template-columns:22px 1fr;gap:12px;align-items:start}
+.notes li svg{margin-top:4px;color:var(--violet)}
+.notes li:nth-child(3n+2) svg{color:var(--pink)} .notes li:nth-child(3n) svg{color:var(--mint)}
+.cond{background:linear-gradient(135deg,var(--violet-soft),var(--pink-soft));border-radius:var(--r-m);padding:18px 20px;display:grid;gap:6px}
+.cond b{font-family:var(--f-head);font-size:1.15rem;font-weight:600}
+.think{display:grid;gap:10px}
+.think ol{margin:0;padding-left:1.3em;display:grid;gap:6px}
+textarea{width:100%;min-height:96px;resize:vertical;font:inherit;font-size:1rem;color:var(--ink);background:var(--card2);border:2px solid var(--line);border-radius:18px;padding:12px 14px}
+textarea:focus{outline:none;border-color:var(--violet)}
+.refs{display:flex;gap:8px;flex-wrap:wrap}
+.ref{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:8px 14px;background:var(--violet-soft);color:var(--violet);font-weight:800;font-size:.86rem;text-decoration:none}
+.ref:hover{filter:brightness(1.04)}
+.src{font-size:.84rem;color:var(--muted)}
+.yq{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:8px}
+.yq button{border:0;border-radius:16px;padding:10px 0;font-weight:800;background:var(--violet-soft);color:var(--violet);transition:transform .15s,background .2s}
+.yq button.on{background:var(--mint);color:#fff;animation:pop .35s}
+.yq button:active{transform:scale(.9)}
+@keyframes pop{40%{transform:scale(1.18)}}
+
+/* quiz & practice */
+.opts{display:grid;gap:10px}
+.opt{all:unset;box-sizing:border-box;cursor:pointer;border-radius:18px;padding:14px 18px;background:var(--card2);border:2px solid var(--line);font-weight:700;transition:transform .15s,background .2s,border-color .2s}
+.opt:hover{border-color:var(--violet)}
+.opt:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+.opt.right{background:var(--mint-soft);border-color:var(--mint);animation:pop .35s}
+.opt.wrong{background:var(--pink-soft);border-color:var(--pink);animation:shake .35s}
+.opt[disabled]{cursor:default}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.tabs{display:flex;gap:6px;background:var(--card2);border-radius:999px;padding:5px;width:max-content;max-width:100%}
+.tabs button{border:0;background:transparent;border-radius:999px;padding:9px 18px;font-weight:800;color:var(--muted)}
+.tabs button.on{background:var(--violet);color:var(--on-violet)}
+.flip{perspective:1000px;cursor:pointer;min-height:220px}
+.flip-in{position:relative;width:100%;min-height:220px;transition:transform .6s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--r-l);display:grid;place-items:center;text-align:center;padding:24px;box-shadow:var(--shadow)}
+.face.front{background:linear-gradient(135deg,var(--violet),var(--pink));color:#fff}
+.face.front b{font-family:var(--f-head);font-size:2rem;font-weight:600}
+.face.back{background:var(--card);transform:rotateY(180deg);font-size:1.15rem;font-weight:700}
+.bigscore{font-family:var(--f-head);font-size:3rem;font-weight:600;line-height:1}
+
+/* conditions */
+.tenlist{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.tenlist li{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;background:var(--card);border-radius:var(--r-m);padding:14px 16px;box-shadow:var(--shadow-s);transition:background .3s}
+.tenlist li.on{background:var(--mint-soft)}
+.tenbtn{width:40px;height:40px;border-radius:14px 18px 14px 18px;border:2px solid var(--line);background:var(--card2);font-weight:800;color:var(--violet);transition:all .25s}
+.tenlist li.on .tenbtn{background:var(--mint);border-color:var(--mint);color:#fff;border-radius:50%}
+
+/* mentor */
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.tbl{overflow-x:auto}
+
+footer{margin-top:40px;font-size:.84rem;color:var(--muted);display:grid;gap:6px;text-align:center}
+
+/* view transitions */
+.view>*{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+.view>*:nth-child(2){animation-delay:.06s}.view>*:nth-child(3){animation-delay:.12s}.view>*:nth-child(4){animation-delay:.18s}.view>*:nth-child(5){animation-delay:.24s}.view>*:nth-child(6){animation-delay:.3s}
+@keyframes rise{from{transform:translateY(14px);opacity:.01}}
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);opacity:0;background:var(--ink);color:var(--bg);padding:12px 22px;border-radius:999px;font-weight:800;pointer-events:none;transition:all .3s cubic-bezier(.2,.8,.2,1);z-index:50;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.confetti{position:fixed;top:-12px;width:10px;height:14px;z-index:60;pointer-events:none;border-radius:3px;animation:fall 1.7s cubic-bezier(.3,.6,.4,1) forwards}
+@keyframes fall{to{transform:translate(var(--dx),105vh) rotate(var(--rot));opacity:.9}}
+.celebrate{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(6px);padding:20px}
+.celebrate .card{max-width:420px;text-align:center;display:grid;gap:14px;animation:pop .5s}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+</head>
+<body>
+<div class="sky" aria-hidden="true">
+  <div class="blob a"></div><div class="blob b"></div><div class="blob c"></div>
+  <svg class="star" style="top:12%;left:8%;width:34px" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1l3.2 4.9 5.6-.8-.8 5.6L23 12l-3 1.3.8 5.6-5.6-.8L12 23l-3.2-4.9-5.6.8.8-5.6L1 12l3-1.3-.8-5.6 5.6.8z"/></svg>
+  <svg class="star" style="top:28%;right:9%;width:22px;animation-delay:1.5s" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1l3.2 4.9 5.6-.8-.8 5.6L23 12l-3 1.3.8 5.6-5.6-.8L12 23l-3.2-4.9-5.6.8.8-5.6L1 12l3-1.3-.8-5.6 5.6.8z"/></svg>
+  <svg class="star" style="top:62%;left:5%;width:26px;animation-delay:3s" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1l3.2 4.9 5.6-.8-.8 5.6L23 12l-3 1.3.8 5.6-5.6-.8L12 23l-3.2-4.9-5.6.8.8-5.6L1 12l3-1.3-.8-5.6 5.6.8z"/></svg>
+  <svg class="star" style="top:80%;right:7%;width:38px;animation-delay:2s" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1l3.2 4.9 5.6-.8-.8 5.6L23 12l-3 1.3.8 5.6-5.6-.8L12 23l-3.2-4.9-5.6.8.8-5.6L1 12l3-1.3-.8-5.6 5.6.8z"/></svg>
+</div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7C5CE6"/><stop offset="1" stop-color="#E0628F"/></linearGradient></defs></svg>
+
+<div class="wrap">
+  <main id="view" class="view"></main>
+  <footer>
+    <div>Lessons are written in plain English from the New Ahmadi Tarbiyyat Syllabus and the Jama'at's books on alislam.org.</div>
+    <div id="saved">Progress is saved on this device.</div>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ================= SOURCES ================= */
+const SYL="https://ahmadiconverts.ahmadiyya.uk/wp-content/uploads/2023/10/New-Ahmadi-Muslim-Tarbiyyat-Training-Syllabus-2nd-EDITION-2022-REVISED-December-2021.pdf";
+const SRC={
+  BRE:["Basics of Religious Education","https://new.alislam.org/library/en/books/basics-religious-education"],
+  ITA:["Invitation to Ahmadiyyat","https://new.alislam.org/library/en/books/invitation-to-ahmadiyyat"],
+  COB:["Conditions of Bai'at & Responsibilities of an Ahmadi","https://new.alislam.org/library/en/books/conditions-baiat-responsibilities-ahmadi"],
+  YQ:["Qāʻidah Yassarnal-Qur'ān","https://www.alislam.org/book/qaidah-yassarnal-quran/"],
+  SAL:["Salat: The Muslim Prayer Book","https://www.alislam.org/book/salat/"],
+  PTP:["Pathway to Paradise","https://www.alislam.org/book/pathway-to-paradise/islamic-beliefs-teachings/"],
+  LOM:["Life of Muhammad(sa)","https://www.alislam.org/book/life-of-muhammad/"],
+  LOA:["Life of Ahmad(as)","https://www.alislam.org/book/life-of-ahmad/"],
+  FG:["Forty Gems of Beauty","https://www.alislam.org/book/forty-gems-beauty/"],
+  PRI:["A Primer of Religious Knowledge","https://files.alislam.cloud/pdf/Primer-Religious-Knowledge.pdf"],
+  WILL:["The Will (Al-Wasiyyat)","https://new.alislam.org/library/en/books/will"],
+  VOI:["The Victory of Islam","https://www.alislam.org/book/victory-of-islam/"],
+  JII:["Jesus in India","https://new.alislam.org/library/en/books/jesus-in-india"],
+  SYL:["New Ahmadi Tarbiyyat Syllabus",SYL],
+  TEN:["The ten conditions, official wording","https://new.alislam.org/library/books/syllabus-waqf-e-nau-part-3-years-15-21?page=30"]
+};
+const Q=v=>["Holy Qur'an "+v,"https://www.alislam.org/quran/app/"+v];
+
+/* ================= TEN CONDITIONS (plain-English summaries) ================= */
+const TEN=[
+"Never associate anything or anyone with God, for the rest of your life.",
+"Keep away from lying, sexual immorality (including lustful looks), wickedness, cruelty, dishonesty, causing trouble and rebellion. Don't let your desires carry you away, however strong they feel.",
+"Pray the five daily prayers. Try hard to also pray Tahajjud (the late-night prayer) and to send blessings (Durud) on the Holy Prophet(sa). Every day, ask forgiveness, remember God's favours and praise Him.",
+"Never harm any of God's creatures, by your words, your hands or any other way, even when your emotions are running high.",
+"Stay faithful to God in every situation, happy or sad, easy or hard. Accept what He decides, bear hardship in His way, and keep moving forward instead of turning back.",
+"Leave behind customs that go against Islam and give up base desires. Make the Holy Qur'an and the sayings of the Holy Prophet(sa) your guide in every part of life.",
+"Give up pride and vanity completely. Live with humility, cheerfulness, patience and gentleness.",
+"Hold your faith, its honour and the cause of Islam dearer than your life, wealth, honour, children and everyone you love.",
+"Spend your life serving God's creation for His sake, and use every ability God gave you to benefit people.",
+"Form a bond of brotherhood with the Promised Messiah(as), obeying him in everything good for the sake of Allah, with a devotion deeper than any worldly relationship, until your last day."
+];
+
+/* ================= MODULES & LESSONS =================
+   L(title, source, notes[], questions[], extra{p:pages, refs:[[label,url]], yq, c, quran})                       */
+function L(t,s,n,q,x){return {t,s,n,q:q||[],x:x||{}};}
+const MODS=[
+{id:"m1",no:1,title:"The Basics of Islam",short:"Basics",blurb:"Beliefs, worship, the Holy Qur'an, the Holy Prophet(sa), the Promised Messiah(as) and Khilafat.",hue:"violet",lessons:[
+L("What is Islam?","PTP",[
+"The word Islam means peace, and the peace that comes from submitting your will to God's will.",
+"A Muslim is simply someone who submits to God and follows His guidance.",
+"Religion is guidance God has sent through prophets. The Qur'an teaches that a guide was sent to every people.",
+"Earlier teachings were meant for particular nations and times, and over the centuries their texts were altered. That is why religions now differ. The Qur'an completes and protects the message.",
+"We were created to know God and worship Him. Worship has two sides: our duties to God (Huquq-Allah) and our duties to people (Huquq-ul-'Ibad)."],
+["What is religion?","Why do teachings of various religions differ?","Who are we?","What is Islam?"],{p:"BRE 3–4"}),
+L("The Six Articles of Faith","FG",[
+"Faith (Iman) rests on six beliefs, which the Holy Prophet(sa) listed himself:",
+"1 · Allah, the One God with no partner. 2 · His angels, spiritual beings who carry out His commands. 3 · His books: the Torah, Psalms, Gospel and, last and complete, the Holy Qur'an.",
+"4 · His prophets, sent to every nation, believed in without making distinctions. 5 · The Last Day, when every soul is judged by its own deeds. 6 · Divine decree: God's plan, within which people still have free will.",
+"These beliefs are the foundation; they connect a person to God and to the unseen."],
+["How many articles of faith are there?","Can you name them?","Why do we believe in them?"],{p:"BRE 5–9"}),
+L("The Five Pillars","PTP",[
+"Islam is built on five pillars. Belief and practice go together.",
+"Shahadah: declaring that there is none worthy of worship except Allah, and that Muhammad(sa) is His Messenger.",
+"Salat: the five daily prayers. Fasting (Saum): in Ramadan, from dawn to sunset, with exemptions for the sick, travellers, the elderly and others.",
+"Zakat: an annual charge of one-fortieth on savings held for a full year, given for the poor and other set purposes.",
+"Hajj: pilgrimage to the Ka'bah in Makkah, once in a lifetime for those who are able and can afford it."],
+["How many pillars are there?","What is the aim of the pillars?","How is each pillar practised?"],{p:"BRE 10–14"}),
+L("Purpose of Life and Good Conduct","PTP",[
+"The Qur'an says humans were created to worship God and come to know Him.",
+"Serving people is part of worship. Caring for every human being, not only Muslims, is taught throughout Islam.",
+"The Holy Prophet(sa) taught that you are not a true believer until you want for your brother what you want for yourself.",
+"His own example: when he conquered Makkah, he forgave the people who had persecuted him for years.",
+"Anas(ra), who served him for years as a boy, said the Prophet(sa) never spoke harshly to him."],
+["What is the true purpose of life?","Should we love every single human being?","Name one example from the life of the Holy Prophet(sa)."],{p:"BRE 15–16"}),
+L("What Makes Islam Distinct","PTP",[
+"Islam's message is universal: for every people and every age, not one nation.",
+"It teaches there is no compulsion in religion (Qur'an 2:257) and that all people are equal; only righteousness raises a person.",
+"Its scripture is complete and protected by God.",
+"It is a living faith: God still speaks to His servants and answers prayers.",
+"The Holy Prophet(sa) foretold that in the Latter Days Islam would be revived by the Messiah and Mahdi."],
+["What are the distinctive features of Islam?","Who will revive Islam in the Latter Days?"],{p:"BRE 17–19"}),
+L("Ahmadiyyat, the Revival of Islam","PTP",[
+"The Ahmadiyya Muslim Community was founded in 1889 by Hazrat Mirza Ghulam Ahmad(as) of Qadian, India.",
+"He claimed to be the Promised Messiah and Mahdi whom the Holy Prophet(sa) foretold. Ahmadiyyat is not a new religion; it is Islam.",
+"His mission: revive Islam and show the glory of the Holy Prophet(sa), through argument, writing and prayer, never by the sword.",
+"Three main points of difference with other Muslims:",
+"1 · Jesus(as) did not die on the cross; he died a natural death. 2 · The Messiah and the Mahdi are one person, a follower of the Holy Prophet(sa). 3 · 'Seal of the Prophets' means no new law-bearing prophet can come, but a prophet who follows the Holy Prophet(sa) can."],
+["What was the grand mission of the Promised Messiah(as)?","What are the main points of distinction of an Ahmadi Muslim?"],{p:"BRE 20–26",refs:[SRC.VOI]}),
+L("Allah and His Attributes","ITA",[
+"Allah is One. He has no partner, no son and no equal.",
+"He is holy, free of every flaw, and not limited by time or place.",
+"He speaks to His chosen servants and answers prayer.",
+"Surah Al-Fatiha names four of His great attributes: Lord of all the worlds (Rabb), the Gracious (Rahman), the Merciful (Rahim), and Master of the Day of Judgement.",
+"Surah Al-Ikhlas sums it up: God is One, needs no one, has no children and was not born, and nothing is like Him."],
+["Which attributes of Allah do you find most comforting?","What does it mean that God still speaks?"],{p:"BRE 30–35",refs:[Q("112:2")]}),
+L("The Holy Qur'an","PTP",[
+"The Qur'an was revealed to the Holy Prophet(sa) over 23 years. It has 114 chapters (Surahs) and is divided into 30 parts.",
+"The first verses revealed were the opening of Surah Al-'Alaq, in the cave of Hira.",
+"God promises in the Qur'an that He Himself will guard it (15:10). From the start it was memorised by many companions and written down as it was revealed.",
+"Etiquette: be clean, begin with Ta'awwudh (seeking refuge from Satan) and Bismillah, recite slowly, and try to understand the meaning.",
+"Hazrat Khalifatul Masih V(aba) advises reading a little every day, along with its translation."],
+["What is the Holy Qur'an?","How was it safeguarded?","What etiquette do we follow when reciting it?"],{p:"BRE 35–40",refs:[Q("15:10")]}),
+L("Surah Al-Fatiha","PRI",[
+"Al-Fatiha, 'The Opening', is the first chapter and is recited in every unit of every prayer.",
+"Its meaning in brief: all praise belongs to Allah, Lord of all the worlds, the Gracious, the Merciful, Master of the Day of Judgement.",
+"You alone we worship, and You alone we ask for help.",
+"Guide us on the straight path: the path of those You have blessed, not of those who earned Your displeasure or went astray.",
+"It is called the most complete prayer because it holds praise, worship and a request for guidance, and it summarises the whole Qur'an."],
+["Why is Al-Fatiha the most comprehensive prayer?","What significance does it have for you?"],{p:"BRE 50–54",refs:[Q("1:1")]}),
+L("What is Hadith?","PTP",[
+"A Hadith is a report of something the Holy Prophet(sa) said or did. His practice is called the Sunnah.",
+"Order of authority: first the Qur'an, then the Sunnah, then Hadith.",
+"A Hadith that clearly contradicts the Qur'an is not accepted.",
+"The six best-known collections: Bukhari, Muslim, Tirmidhi, Abu Dawud, Ibn Majah and Nasa'i."],
+["What is a Hadith?","Why is Hadith important?","Name the most authentic collections."],{p:"BRE 91–92"}),
+L("Forty Ahadith: 1 to 10","FG",[
+"1 · Faith is belief in God, His angels, books, prophets, the Last Day and divine decree.",
+"2 · Islam rests on five pillars: testimony, prayer, Zakat, Hajj and fasting.",
+"3 · The Holy Prophet(sa) was given gifts no earlier prophet had, including a mission to all people.",
+"4 · He is the last law-giving prophet. Any later reformer works within his prophethood.",
+"5 · Actions are judged by intentions.  6 · Allah looks at hearts and deeds, not looks or wealth.",
+"7 · Aim for the highest ranks by serving faith with your time and means.  8 · Change wrong with your hand, your words, or at least your heart.",
+"9 · Wish for your brother what you wish for yourself.  10 · Help your brother when he's wronged, and stop him when he's doing wrong."],
+["Which of these sayings speaks to you most?"],{p:"BRE 93–100"}),
+L("Forty Ahadith: 11 to 20","FG",[
+"11 · Obey those in authority in what is right, never in disobeying God.  12 · Speaking the truth to an unjust ruler is a great jihad.",
+"13 · Be gentle with the young and respect elders.  14 · The greatest sins: associating partners with God, disobeying parents and lying.",
+"15 · Respect and educate children.  16 · Choose a spouse for their piety.",
+"17 · The best men are those best to their wives.  18 · A righteous woman fulfils her duties to her husband.",
+"19 · Whoever raises an orphan will be close to the Prophet(sa) in Paradise.  20 · Treat neighbours well."],
+["Which of these sayings could you practise this week?"],{p:"BRE 100–105"}),
+L("Forty Ahadith: 21 to 30","FG",[
+"21 · Don't wish for war, but stand firm if it comes.  22 · Keep treaties, and spare women and children.",
+"23 · Avoid the seven destructive sins, including unjust killing and usury.  24 · Intoxicants are forbidden, even in small amounts.",
+"25 · A person who cheats is not truly one of us.  26 · Don't blindly imitate other nations.",
+"27 · When the heart is sound, the whole body is sound.  28 · Leave what troubles your conscience.",
+"29 · Don't let feelings of inferiority defeat you.  30 · True repentance washes sin away."],
+["Which saying surprised you?"],{p:"BRE 106–112"}),
+L("Forty Ahadith: 31 to 40","FG",[
+"31 · A believer isn't bitten twice from the same hole; learn from mistakes.  32 · Nothing is better than good character.",
+"33 · Honour the respected leaders of other peoples.  34 · Pay workers before their sweat dries.",
+"35 · The worst feast is one where only the rich are invited.  36 · The giving hand is better than the receiving hand.",
+"37 · Leave your heirs comfortable rather than in need.  38 · Everyone is a shepherd, responsible for those in their care.",
+"39 · Seeking knowledge is a duty of every Muslim.  40 · Wisdom is the believer's lost property; take it wherever you find it."],
+["Which saying would you share with a friend?"],{p:"BRE 113–119"}),
+L("Ahadith review: 1 to 10","FG",[
+"This lesson is recall practice. Try to explain each idea in your own words before checking the earlier lesson:",
+"Intentions · Allah looks at hearts · the five pillars · the six beliefs · wishing for your brother what you wish for yourself · changing wrong with hand, tongue or heart.",
+"Tip: pick one saying and act on it today."],
+["Explain one of these sayings to someone else in one sentence."],{p:"BRE 121–124"}),
+L("Ahadith review: 11 to 20","FG",[
+"Recall practice. In your own words, what did the Holy Prophet(sa) teach about:",
+"Obeying authority · speaking truth to power · children and elders · the greatest sins · choosing a spouse · how to treat a wife · orphans · neighbours."],
+["Which one is hardest to live by, and why?"],{p:"BRE 124–126"}),
+L("Ahadith review: 21 to 30","FG",[
+"Recall practice. What do you remember about:",
+"War and treaties · the seven destructive sins · intoxicants · cheating · imitation · the heart · a troubled conscience · inferiority · repentance."],
+["Which saying would help most in everyday life?"],{p:"BRE 127–130"}),
+L("Ahadith review: 31 to 40","FG",[
+"Recall practice. What do you remember about:",
+"Learning from mistakes · good character · honouring leaders of other peoples · paying workers · fair feasts · giving · heirs · responsibility · knowledge · wisdom."],
+["Which saying will you remember the longest?"],{p:"BRE 130–134"}),
+L("The Holy Prophet(sa) in Makkah","LOM",[
+"Arabia before Islam: most Arabs worshipped idols (about 360 stood around the Ka'bah), and women, slaves and the poor were treated harshly.",
+"He was born in Makkah in 570 CE. His father Abdullah died before his birth; his mother Aminah died when he was young. His grandfather Abdul Muttalib, then his uncle Abu Talib, raised him.",
+"Known as Al-Amin, 'the Trustworthy', he married Khadijah(ra), a respected widow, at about 25.",
+"At about 40, while praying in the cave of Hira, he received the first revelation. Khadijah(ra), Zaid(ra), the young Ali(ra) and Abu Bakr(ra) were the first believers.",
+"Years of persecution followed: believers like Bilal(ra) were tortured, some Muslims fled to Abyssinia, and his clan was boycotted for about three years.",
+"Soon after, Khadijah(ra) and Abu Talib died. He was stoned at Ta'if. In 622 he migrated (the Hijrah) to Madinah, hiding with Abu Bakr(ra) in the cave of Thaur on the way."],
+["What was the family background of the Holy Prophet(sa)?","What do you know about his life in Makkah?"],{p:"BRE 220–225",refs:[SRC.LOM]}),
+L("The Holy Prophet(sa) in Madinah","LOM",[
+"He built a mosque on land he insisted on paying for, and paired each Makkan Muslim with a Madinan as brothers.",
+"The Charter of Madinah made Muslims, Arabs and Jews fellow citizens with shared defence and freedom of religion.",
+"Badr (2 AH): about 313 Muslims defeated an army three times larger. Literate prisoners could earn freedom by teaching ten children to read.",
+"Uhud (3 AH) and the Trench (5 AH), dug on the advice of Salman the Persian, followed. The Treaty of Hudaibiyah (628) set a ten-year truce, and letters went to rulers like Heraclius and the Negus.",
+"In 8 AH he entered Makkah with about 10,000 followers, almost without bloodshed, cleared the idols and forgave his enemies: 'no blame on you today'.",
+"His farewell sermon taught that life and property are sacred, women have rights, and all people are equal. Among his wives were Khadijah, Aishah, Safiyyah and Maimunah(ra)."],
+["What happened in Madinah?","Name some of the wives of the Holy Prophet(sa)."],{p:"BRE 226–233",refs:[SRC.LOM]}),
+L("The Rightly Guided Khilafat","PTP",[
+"After the Holy Prophet(sa) passed away, Allah raised successors (Khalifas) to carry on his mission.",
+"The four Rightly Guided Khalifas: Hazrat Abu Bakr, Hazrat Umar, Hazrat Uthman and Hazrat Ali(ra).",
+"When the Prophet(sa) died, Hazrat Abu Bakr(ra) calmed the people by reciting Qur'an 3:145: Muhammad is a Messenger, and messengers before him have passed away.",
+"During this Khilafat the Qur'an, already memorised and written down, was gathered into one volume and copies were spread.",
+"Over the centuries Muslims lost the blessing of Khilafat. Ahmadis believe it was restored after the Promised Messiah(as)."],
+["Name the four Khulafa.","How was the Holy Qur'an preserved?"],{p:"BRE 234–242",refs:[Q("3:145")]}),
+L("The Promised Messiah(as): Early Life","LOA",[
+"Hazrat Mirza Ghulam Ahmad(as) was born on Friday 13 February 1835 in Qadian, in the Punjab, India.",
+"His family came originally from Samarkand. An ancestor, Mirza Hadi Baig, founded the village that became Qadian.",
+"His father, Mirza Ghulam Murtaza, was a physician who treated people for free. His mother, Charagh Bibi, was known for her piety.",
+"As a child he loved his father's library and reading the Qur'an in the mosque, and wasn't interested in games."],
+["What do you know about the early life of the Promised Messiah(as)?"],{p:"BRE 244–248",refs:[SRC.LOA]}),
+L("The Promised Messiah(as): Youth and Devotion","LOA",[
+"Tutors taught him the Qur'an, Persian, Arabic grammar and logic; his father taught him medicine.",
+"From 1863 he worked at the court in Sialkot, where he also debated Christian missionaries. He resigned and returned to Qadian in 1868.",
+"He preferred prayer and solitude to worldly work, and spent long periods in study and worship.",
+"In 1868 he received a revelation that God was pleased with him and that kings would seek blessings from him."],
+["What stands out to you about his youth?"],{p:"BRE 249–250",refs:[SRC.LOA]}),
+L("The Promised Messiah(as): Defender of Islam","ITA",[
+"His father died in 1876. At that time he received the revelation 'Is not Allah sufficient for His servant?'",
+"Islam was under heavy attack from missionaries and others. His book Barahin-e-Ahmadiyya (1880s) set out arguments for Islam and offered Rs 10,000 to anyone who could answer them. No one did.",
+"On 1 December 1888 he announced that God had commanded him to take bai'at (a pledge). On 12 January 1889 he published the ten conditions.",
+"The first bai'at took place on 23 March 1889 in Ludhiana. Hazrat Hakim Nooruddin(ra) was the first to pledge."],
+["Why did he write Barahin-e-Ahmadiyya?","How did the Community begin?"],{p:"BRE 250–255",refs:[SRC.VOI]}),
+L("The Promised Messiah(as): His Claim and Legacy","PTP",[
+"In The Victory of Islam (1890–91) he announced that God had appointed him the Promised Messiah and Mahdi.",
+"He faced fierce opposition from clerics and others, yet the Community kept growing.",
+"He wrote more than eighty books in Urdu, Arabic and Persian, defending Islam by argument, never force.",
+"In 1905 he wrote The Will (Al-Wasiyyat), promising that Khilafat, the 'second manifestation', would follow him.",
+"He passed away on 26 May 1908. The next day, Hazrat Nooruddin(ra) was elected the first Khalifa."],
+["How did God support him?","What did he promise in The Will?"],{p:"BRE 256–259",refs:[SRC.WILL]}),
+L("Khilafat-e-Ahmadiyya: I and II","SYL",[
+"Allah promises Khilafat to believers who do good works (Qur'an 24:56).",
+"Khalifatul Masih I, Hazrat Hakim Nooruddin(ra) (1908–1914): the first to take bai'at, a great scholar of the Qur'an and a physician. He set up the treasury, schools and publications, and defended Khilafat.",
+"Khalifatul Masih II, Hazrat Mirza Bashir-ud-Din Mahmud Ahmad(ra) (1914–1965): the 'Promised Son', elected at 25 and Khalifa for 52 years.",
+"He sent missions abroad (the USA in 1920), began Tahrik-e-Jadid and Waqf-e-Jadid, created the auxiliary organisations, and wrote the 10-volume commentary Tafsir-e-Kabir."],
+["What does the Qur'an say about Khilafat?","Who were the first and second Khalifas?"],{p:"BRE 260–269",refs:[Q("24:56"),SRC.WILL]}),
+L("Khilafat-e-Ahmadiyya: III and IV","SYL",[
+"Khalifatul Masih III, Hazrat Mirza Nasir Ahmad(rh) (1965–1982): educated at Oxford, had memorised the whole Qur'an by 13.",
+"He launched the Nusrat Jehan Scheme, which built 17 medical centres and 15 schools in West Africa.",
+"At the foundation of the Basharat Mosque in Spain he announced the motto 'Love for All, Hatred for None'.",
+"Khalifatul Masih IV, Hazrat Mirza Tahir Ahmad(rh) (1982–2003): developed MTA, the Community's satellite TV. In 1993 the first International Bai'at was held by satellite; over 200,000 joined."],
+["Who were the third and fourth Khalifas?","What is the Community's motto?"],{p:"BRE 271–280"}),
+L("Khilafat-e-Ahmadiyya: V and Today","SYL",[
+"Khalifatul Masih V, Hazrat Mirza Masroor Ahmad(aba), was elected on 22 April 2003.",
+"He leads a worldwide effort promoting peace, the worship of God and service to humanity.",
+"He delivers a Friday Sermon every week, broadcast live on MTA in many languages, and replies to thousands of letters.",
+"Even after 86 Ahmadis were martyred in Lahore in 2010, he told the Community to respond only with prayer and peace.",
+"Today the Community is in over 200 countries and has built thousands of mosques, schools and clinics."],
+["What is the name of the fifth Khalifa?","What are some achievements of the Community?"],{p:"BRE 281–290"})
+],quiz:[
+["Who was the first Khalifa after the Holy Prophet(sa)?",["Hazrat Ali(ra)","Hazrat Abu Bakr(ra)","Hazrat Umar(ra)","Hazrat Uthman(ra)"],1],
+["Who was the first Khalifa of the Promised Messiah(as)?",["Hazrat Nooruddin(ra)","Hazrat Mirza Nasir Ahmad(rh)","Hazrat Mirza Tahir Ahmad(rh)","Hazrat Mirza Masroor Ahmad(aba)"],0],
+["Which Khalifa announced 'Love for All, Hatred for None'?",["The First","The Second","The Third","The Fifth"],2],
+["How many articles of faith are there?",["Three","Five","Six","Ten"],2],
+["Where did the Holy Prophet(sa) receive the first revelation?",["Cave of Thaur","Cave of Hira","Madinah","Ta'if"],1],
+["When was the Promised Messiah(as) born?",["1835","1889","1908","1876"],0]
+]},
+{id:"m2",no:2,title:"Learning to Pray",short:"Salat",blurb:"Why we pray, when, how to do Wudu, and the prayer step by step.",hue:"pink",lessons:[
+L("Why Salat Matters","SAL",[
+"Salat (prayer) is the second pillar of Islam and is required of every adult Muslim of sound mind.",
+"It cleanses the heart, keeps a person away from wrongdoing and brings them close to Allah.",
+"The Holy Prophet(sa) said the five prayers wash away sins like bathing in a river five times a day.",
+"The Promised Messiah(as) called prayer the key to success, and taught that its heart is heartfelt supplication."],
+["Why is Salat so important?"],{p:"BRE 174–177"}),
+L("Kinds of Prayer and Prayer Times","SAL",[
+"Fard (compulsory) units, called rak'at: Fajr 2 · Zuhr 4 · Asr 4 · Maghrib 3 · Isha 4.",
+"Sunnah prayers, the Prophet's(sa) practice: 2 before Fajr, 4 before and 2 after Zuhr, 2 after Maghrib, 2 after Isha. Witr is 3 rak'at after Isha.",
+"Fajr: dawn until just before sunrise. Zuhr: after midday. Asr: late afternoon. Maghrib: just after sunset. Isha: after dusk, ideally before midnight.",
+"No prayer is offered exactly at sunrise, noon or sunset."],
+["What types of prayer are there?","What are the prayer times?"],{p:"BRE 178–181"}),
+L("Getting Ready to Pray","SAL",[
+"Before praying: make your intention, be clean in body, clothes and place, cover yourself modestly, and face the Qiblah (the Ka'bah in Makkah).",
+"Women cover everything except the face, hands and feet.",
+"It's best to pray in congregation at a mosque, standing in straight rows, but you can pray anywhere clean.",
+"Tip: a prayer-times app or the mosque's timetable makes it easy to know each time."],
+["What are the etiquettes of Salat?"],{p:"BRE 178–181"}),
+L("Wudu, Adhan and Iqamah","SAL",[
+"Wudu (washing before prayer), each step usually three times: hands · rinse mouth · nose · face · each arm to the elbow, right first · wipe the head and ears · each foot to the ankle, right first.",
+"Wudu is broken by using the toilet, passing wind or deep sleep. If no water is available, do tayammum: pat clean earth and wipe the face and hands.",
+"The Adhan is the call to prayer. Its meaning: Allah is the Greatest · I bear witness none is worthy of worship but Allah · and that Muhammad is His Messenger · come to prayer · come to success.",
+"The Iqamah is a shorter call said just before the prayer starts, announcing 'the prayer is ready'."],
+["What is the significance of a mosque?","How is Wudu performed?","What are the Adhan and Iqamah?"],{p:"BRE 182–187"}),
+L("How to Pray, Part 1","SAL",[
+"1 · Raise both hands to your ears and say Allahu Akbar (Allah is the Greatest).",
+"2 · Stand with the right hand over the left on your chest. Silently praise Allah (Thana), seek refuge from Satan, and say Bismillah.",
+"3 · Recite Surah Al-Fatiha, then 'Amin', then a short Surah such as Al-Ikhlas.",
+"4 · Bow (Ruku'), hands on knees, back straight: 'Subhana Rabbiyal-'Azim' (Glory to my Lord, the Most Great), three times.",
+"5 · Stand up saying 'Sami'allahu liman hamidah' (Allah hears those who praise Him), then 'Rabbana lakal-hamd' (Our Lord, all praise is Yours)."],
+["Practise the standing and bowing positions slowly."],{p:"BRE 188–191"}),
+L("How to Pray, Part 2","SAL",[
+"6 · Prostrate (Sajdah): forehead, nose, hands, knees and toes on the ground. Say 'Subhana Rabbiyal-A'la' (Glory to my Lord, the Most High) three times.",
+"7 · Sit briefly and ask forgiveness, then prostrate a second time. That completes one rak'at.",
+"8 · After two rak'at, sit and recite the Tashahhud (testimony of faith), raising the right index finger at the testimony.",
+"9 · At the end, recite Durud (blessings on the Prophet(sa)) and a short prayer.",
+"10 · Turn your head right, then left: 'Assalamu 'alaikum wa rahmatullah' (peace and mercy of Allah be on you)."],
+["Practise the full prayer once, slowly, from start to finish."],{p:"BRE 191–195"}),
+L("After the Prayer, and Witr","SAL",[
+"After Salat, sit and remember Allah: 'Subhanallah' 33 times, 'Alhamdulillah' 33 times, 'Allahu Akbar' 34 times.",
+"A beautiful short prayer after Salat: 'O Allah, You are Peace, and from You comes peace.'",
+"Witr is three rak'at prayed after Isha. In the third rak'at, after bowing, a special prayer called Qunut asks Allah for help, forgiveness and protection.",
+"On Fridays, the congregational Jumu'ah prayer with a sermon replaces Zuhr."],
+["What is said after Salat?","What is the Witr prayer?"],{p:"BRE 196–200"}),
+L("The Funeral Prayer","SAL",[
+"The funeral prayer (Janazah) is offered standing only, with no bowing or prostration.",
+"Takbir 1: praise Allah and recite Al-Fatiha.  Takbir 2: recite Durud on the Holy Prophet(sa).",
+"Takbir 3: pray for the person who has passed away.  Takbir 4: end with salam to the right and left.",
+"It is a communal duty: if some Muslims offer it, the rest are excused."],
+["How is the funeral prayer offered?"],{p:"BRE 200–203"}),
+L("Understanding the Words, Part 1","SAL",[
+"Allahu Akbar: Allah is the Greatest.",
+"Thana: 'Holy are You, O Allah, and all praise is Yours; blessed is Your name, exalted Your majesty, and there is none worthy of worship besides You.'",
+"Ta'awwudh: I seek refuge in Allah from Satan, the rejected.  Bismillah: In the name of Allah, the Gracious, the Merciful.",
+"Knowing the meaning helps you focus. The Promised Messiah(as) taught that prayer should be offered with understanding."],
+["Say each phrase and its meaning aloud."],{p:"BRE 205–210"}),
+L("Understanding the Words, Part 2","SAL",[
+"Tashahhud: all greetings, prayers and good things are for Allah; peace be on the Prophet and on all righteous servants; I bear witness there is none worthy of worship but Allah, and that Muhammad is His servant and Messenger.",
+"Durud: O Allah, bless Muhammad and his people as You blessed Abraham and his people.",
+"If you are ill, pray sitting or lying down. When travelling, the 4-rak'at prayers are shortened to 2 and prayers may be combined.",
+"If you make a mistake, two extra prostrations at the end (Sajdah Sahw) make up for it."],
+["Which phrase means the most to you?"],{p:"BRE 116–120"})
+],quiz:[
+["How many fard rak'at are in Maghrib?",["2","3","4","5"],1],
+["What does 'Allahu Akbar' mean?",["Allah is One","Allah is the Greatest","All praise to Allah","In the name of Allah"],1],
+["What is Tahajjud?",["The Friday prayer","The late-night voluntary prayer","The funeral prayer","The call to prayer"],1],
+["In Wudu, what is washed last?",["The face","The arms","The feet","The hands"],2],
+["How many takbirs are in the funeral prayer?",["Two","Three","Four","Seven"],2],
+["What do you say in Sajdah?",["Subhana Rabbiyal-A'la","Rabbana lakal-hamd","Amin","Allahu Akbar only"],0]
+]},
+{id:"m3",no:3,title:"Reading the Qur'an",short:"Recitation",blurb:"The Arabic letters and sounds, then the 40 lessons of Yassarnal Qur'an.",hue:"mint",lessons:[
+L("The Arabic Letters and Vowel Marks","YQ",[
+"Arabic is read from right to left and has 28 letters. Most letters join to the next one, and their shape changes slightly depending on position.",
+"Short vowels are written as small marks (Irab): Fatha, a stroke above, gives 'a'; Kasra, a stroke below, gives 'i'; Damma, a small loop above, gives 'u'.",
+"Sukun, a small circle, means the letter has no vowel.",
+"Tip: learn a few letters a day out loud, with a teacher or a recording, rather than all at once."],
+["What are the Arabic letters?","What are Irab, the vowel marks?"],{p:"BRE 41–44"}),
+L("Shaddah, Tanween and Long Vowels","YQ",[
+"Shaddah, a small 'w'-shaped mark, doubles a letter: you pronounce it twice, with emphasis.",
+"Tanween, doubled vowel marks, adds an 'n' sound at the end: -an, -in, -un.",
+"Madd letters (alif, waw, ya) stretch a vowel into a long sound.",
+"Each rule makes the recitation correct and beautiful. Practise slowly; speed comes later."],
+["What is a Shaddah?"],{p:"BRE 45–59"}),
+L("Qāʻidah Yassarnal-Qur'ān: the 40 lessons","YQ",[
+"Yassarnal Qur'an is the Jama'at's step-by-step book for learning to read the Qur'an. It has 40 lessons.",
+"A beginner can usually finish it in about six months.",
+"It is not a teach-yourself book: its notes are a guide for a teacher, so learn it with someone who can listen to you read.",
+"Tick each lesson below as you finish it. The syllabus says this class continues, at your own pace, until all 40 are done."],
+["Who could be your recitation teacher?"],{yq:true,refs:[SRC.YQ]})
+],quiz:[
+["How many lessons are in Yassarnal Qur'an?",["10","28","40","114"],2],
+["Which direction is Arabic read?",["Left to right","Right to left","Top to bottom","Either way"],1],
+["What does a Shaddah do?",["Removes the vowel","Doubles the letter","Adds an 'n' sound","Lengthens the vowel"],1],
+["What does a Sukun show?",["A long vowel","No vowel on the letter","A doubled letter","The end of a verse"],1]
+]},
+{id:"m4",no:4,title:"The Last Ten Surahs",short:"Memorise",blurb:"Learn Surahs 105 to 114 by heart, with their meaning.",hue:"peach",lessons:[
+L("Al-Fil (105): The Elephant","PRI",["Recalls the army that marched with elephants to destroy the Ka'bah, and how God destroyed it before it could.","Lesson: God protects His House, and no power can defeat His plan.","How to memorise: listen to one verse, repeat it five times, then add the next. Recite it in your prayers."],["Memorise it and explain its meaning in one sentence."],{p:"BRE 83",quran:"105:1"}),
+L("Quraish (106)","PRI",["Reminds the Quraish of God's favours: safe trade journeys in winter and summer.","So they should worship the Lord of this House, who fed them in hunger and kept them safe from fear."],["Memorise it and explain its meaning."],{p:"BRE 83",quran:"106:1"}),
+L("Al-Ma'un (107): Small Kindnesses","PRI",["Warns against denying the faith, pushing away the orphan and not encouraging feeding the poor.","It also warns against praying carelessly or only to be seen, and refusing even small help to others."],["Memorise it and explain its meaning."],{p:"BRE 84",quran:"107:1"}),
+L("Al-Kauthar (108): Abundance","PRI",["God has given the Prophet(sa) abundant good.","So pray and offer sacrifice. It is his enemy who will be cut off. The shortest Surah in the Qur'an."],["Memorise it and explain its meaning."],{p:"BRE 84",quran:"108:1"}),
+L("Al-Kafirun (109)","PRI",["Tells the disbelievers: I do not worship what you worship, and you do not worship what I worship.","'For you your religion, and for me mine': worship cannot be mixed, and no one is forced."],["Memorise it and explain its meaning."],{p:"BRE 84",quran:"109:1"}),
+L("An-Nasr (110): Help","PRI",["When God's help and victory come and people enter Islam in large numbers,","glorify your Lord with His praise and ask His forgiveness. Success should bring humility, not pride."],["Memorise it and explain its meaning."],{p:"BRE 85",quran:"110:1"}),
+L("Al-Lahab (111)","PRI",["About Abu Lahab, an uncle of the Prophet(sa) who fiercely opposed him, and his wife.","His wealth and efforts against the truth could not save him. Opposing God's messenger leads to loss."],["Memorise it and explain its meaning."],{p:"BRE 85",quran:"111:1"}),
+L("Al-Ikhlas (112): Pure Oneness","PRI",["Say: He is Allah, the One. Allah, who needs no one.","He has no children and was not born, and there is none like Him. It sums up the belief in One God."],["Memorise it and explain its meaning."],{p:"BRE 85",quran:"112:1"}),
+L("Al-Falaq (113): Daybreak","PRI",["Seek refuge in the Lord of the daybreak from the harm in creation,","from the darkness when it spreads, from those who blow on knots (who try to break bonds), and from the envious."],["Memorise it and explain its meaning."],{p:"BRE 86",quran:"113:1"}),
+L("An-Nas (114): Mankind","PRI",["Seek refuge in the Lord, King and God of mankind,","from the sneaking whisperer who puts evil thoughts into people's hearts, whether from jinn or men. The final chapter of the Qur'an."],["Memorise it and explain its meaning."],{p:"BRE 86",quran:"114:1"})
+],quiz:[
+["Which Surah is about the oneness of God?",["Al-Fil","Al-Ikhlas","Al-Kauthar","An-Nasr"],1],
+["Which is the last chapter of the Qur'an?",["Al-Falaq","An-Nas","Al-Kauthar","Al-Ma'un"],1],
+["Which Surah is the shortest in the Qur'an?",["Al-Kauthar","Al-Ikhlas","An-Nasr","Quraish"],0],
+["Al-Ma'un warns against…",["Fasting too much","Pushing away the orphan","Travelling in winter","Building houses"],1]
+]},
+{id:"m5",no:5,title:"What Ahmadis Believe",short:"Beliefs",blurb:"The reasons behind Ahmadi beliefs, and how the Jama'at is organised.",hue:"violet",lessons:[
+L("About Invitation to Ahmadiyyat","ITA",[
+"The book was written in 1926 by Hazrat Mirza Bashir-ud-Din Mahmud Ahmad(ra), the second Khalifa, as a letter to Amanullah Khan, the ruler of Afghanistan.",
+"It followed the stoning of Ahmadis in Afghanistan in 1924 and explains, from the Qur'an and Hadith, what Ahmadis really believe.",
+"The name 'Ahmadi' simply marks members out from other Muslims. It honours the Holy Prophet's(sa) second name, Ahmad."],
+["What do you know about the author and the book?","Why was the name Ahmadiyya chosen?"],{p:"ITA 3"}),
+L("The Name Islam","ITA",[
+"Ahmadiyyat is part of Islam, not a new religion. 'Islam' is the name God Himself gave in the Qur'an.",
+"A Muslim is anyone who declares the Kalimah and accepts Islam.",
+"The Holy Prophet(sa) taught that we judge only what a person says, not what is in their heart. When a companion killed a man who had just said the Kalimah, the Prophet(sa) asked, 'Did you split open his heart?'"],
+["Who named our religion Islam?","Who is a Muslim?","Are Ahmadis Muslims?"],{p:"ITA 3–6"}),
+L("Beliefs Ahmadis Hold","ITA",[
+"Ahmadis believe in God's existence and oneness, His perfection, and His angels.",
+"God speaks to His chosen servants; the Qur'an is the most perfect revelation, and its law stands for all time.",
+"God sent guides to every people, and the Holy Prophet(sa) is the chief of them all.",
+"God answers prayer, there will be resurrection and judgement, Hell is for reform rather than endless, and Paradise brings people ever closer to God.",
+"The book points out these beliefs match those of all Muslim scholars."],
+["What is our belief about God?","About angels?","Does God speak?"],{p:"ITA 6–11"}),
+L("Jesus(as) Died a Natural Death","ITA",[
+"Ahmadis believe Jesus(as) survived the cross and later died a natural death. This honours him; it doesn't insult him.",
+"Qur'an 3:56: God told Jesus He would cause him to die and then exalt him. The death comes first.",
+"Qur'an 5:118: Jesus says that after God caused him to die, God alone watched over his followers.",
+"Believing he lives bodily in heaven while the Holy Prophet(sa) rests in the earth doesn't fit the Prophet's(sa) rank."],
+["Is Jesus alive in heaven?","What does the Qur'an say about his death?"],{p:"ITA 11–16",refs:[Q("3:56"),Q("5:118"),SRC.JII]}),
+L("Jesus(as): What the Companions Believed","ITA",[
+"When the Holy Prophet(sa) died, Hazrat Abu Bakr(ra) recited Qur'an 3:145: all messengers before him had passed away. Hazrat Umar(ra) and the companions accepted it, showing none believed Jesus was still alive.",
+"A Hadith says Jesus lived to 120 years.",
+"When Hazrat Ali(ra) passed away, Imam Hasan(ra) said he died on the same night Jesus' spirit was raised up, which only makes sense if Jesus died.",
+"Imam Malik also held that Jesus had died."],
+["What did the Companions believe about Jesus(as)?","What did Imam Hasan(ra) say?"],{p:"ITA 17–24",refs:[Q("3:145")]}),
+L("The Second Coming: a Follower of the Prophet(sa)","ITA",[
+"Since Jesus(as) has died, the promised 'second coming' means someone in his spirit, from among the Holy Prophet's(sa) followers.",
+"Hazrat Mirza Ghulam Ahmad(as) holds this title: the Promised Messiah.",
+"Bringing back an old Israelite prophet would suggest the Holy Prophet's(sa) own spiritual power had run out, which Ahmadis reject."],
+["Will the first Messiah come again physically?","Will the second Messiah be an Israelite?"],{p:"ITA 24–30"}),
+L("Messiah and Mahdi: One Person","ITA",[
+"Hadith: 'There is no Mahdi except Isa (Jesus).' Another: 'How will you be when the son of Mary descends among you, and he is your Imam from among you?'",
+"So the Messiah and the Mahdi are the same person.",
+"'Nuzul' (descent) means coming with great significance, not falling from the sky. The Qur'an speaks of iron and cattle being 'sent down', and of the Prophet(sa) himself being 'sent down' (65:11)."],
+["Are the Messiah and the Mahdi two different people?","What does Nuzul mean?"],{p:"ITA 30–35"}),
+L("Why 'Son of Mary'?","ITA",[
+"'Son of Mary' is a spiritual title, not a claim that Jesus himself returns.",
+"The Qur'an holds up Mary as an example for believers: a believer can reach a spiritual state like hers.",
+"People use names this way all the time: calling a generous person 'a Hatim' after a famous generous Arab."],
+["Why is the second Messiah called Isa ibn Maryam?"],{p:"ITA 35–41"}),
+L("Seal of the Prophets","ITA",[
+"Qur'an 33:41 calls the Holy Prophet(sa) 'Khatam an-Nabiyyin', the Seal of the Prophets.",
+"A seal confirms and validates. It means his rank is above all prophets and every blessing passes through him.",
+"Prophethood that brings a new law, or that is independent of him, is closed. A prophet who is his follower and servant is possible.",
+"He said 'I am the last prophet' and also 'my mosque is the last mosque', yet new mosques are built. Hazrat Aishah(ra) advised: say he is the Seal of the Prophets, but don't say there is no prophet after him."],
+["What does Khatam an-Nabiyyin mean?","Does 'I am the last prophet' close every door?"],{p:"ITA 41–47",refs:[Q("33:41")]}),
+L("The Ranks of Obedience, and Jihad","ITA",[
+"Qur'an 4:70: whoever obeys Allah and the Messenger will be among those He has blessed: prophets, the truthful, martyrs and the righteous.",
+"Muslims pray for 'the path of those You have blessed' in every Al-Fatiha, so these ranks remain open.",
+"Jihad: there is no compulsion in religion (2:257). Fighting is allowed only in defence against those who persecute people for their faith, and Islam protects all places of worship (22:41)."],
+["Which ranks can obedience bring?","What does Jihad mean?"],{p:"ITA 47–57",refs:[Q("4:70")]}),
+L("The Claim and the Need of the Hour","ITA",[
+"His claim: God raised him as the Messiah and Mahdi foretold by the Holy Prophet(sa), to show the Prophet's(sa) glory and make Islam victorious through argument.",
+"God meets our physical needs, so He meets our spiritual needs too.",
+"God promised to guard the Qur'an (15:10), and the Holy Prophet(sa) said a reformer would come at the head of every century.",
+"Muslims had fallen into deep spiritual decline. He was the one who claimed this role at that time."],
+["Why did Allah send the Promised Messiah(as)?","How can we test his truthfulness?"],{p:"ITA 58–66"}),
+L("How the Jama'at Began","SYL",[
+"In December 1888 the Promised Messiah(as) announced that God had told him to found a community; on 12 January 1889 he published the ten conditions.",
+"The first bai'at took place on 23 March 1889, which is when the Ahmadiyya Movement began.",
+"The name Ahmadiyya honours the Holy Prophet's(sa) name Ahmad.",
+"Today the Community is in over 200 countries. Its work is done mostly by volunteers.",
+"To join, a person agrees to the ten conditions and signs a pledge of allegiance to the Khalifa of the time."],
+["When and by whom was the Jama'at founded?","What does joining involve?"],{p:"Appendix 1, pp. 17–18"}),
+L("Khilafat: the Second Manifestation","SYL",[
+"'Khalifa' means one who comes after, carrying on the prophet's mission.",
+"In The Will (1905) the Promised Messiah(as) wrote that his coming was the first manifestation of God's power, and that after him would come a second, lasting one: Khilafat.",
+"Ahmadis believe Allah guides the election of each Khalifa, and members renew their bai'at with every new Khalifa.",
+"The Khalifa is the spiritual head of every Ahmadi, prays for each of them, and Ahmadis write to him for prayers and guidance."],
+["What are the two manifestations of God's power?","What is the status of the Khalifa?"],{p:"Appendix 1, pp. 19–23",refs:[SRC.WILL,Q("24:56")]}),
+L("How the Jama'at Works","SYL",[
+"The Khalifa leads. Each country has an Ameer and a national team; each local branch elects a President.",
+"Members belong to an auxiliary: Lajna Ima'illah for women 15 and over (Nasirat for girls 7–15), Khuddam for men 15–40 (Atfal for boys 7–15), and Ansarullah for men over 40.",
+"Everything is funded by members' donations (chanda). For an earning member, Chanda Aam is 1/16 of income; others include Jalsa Salana, Tahrik-e-Jadid, Waqf-e-Jadid and Wasiyyat.",
+"Anyone in financial hardship may pay less, or nothing, with the Khalifa's permission. The Qur'an says you won't reach righteousness until you spend from what you love (3:93)."],
+["How is the Jama'at structured?","Which auxiliary would you join?","Why does giving matter?"],{p:"Appendix 1, pp. 24–27",refs:[Q("3:93")]})
+],quiz:[
+["On what date did the first bai'at take place?",["12 January 1889","23 March 1889","26 May 1908","22 April 2003"],1],
+["Why is the Community called 'Ahmadiyya'?",["After Qadian","After the Prophet's(sa) name Ahmad","After the first Khalifa","After a city"],1],
+["Which auxiliary is for women aged 15 and over?",["Ansarullah","Khuddam","Lajna Ima'illah","Nasirat"],2],
+["Ahmadis believe the Messiah and Mahdi are…",["Two people","One person","Angels","Still to be born"],1],
+["'Khatam an-Nabiyyin' (33:41) means…",["Seal of the Prophets","First of the Prophets","King of Arabia","Last of the Khalifas"],0]
+]},
+{id:"m6",no:6,title:"The Ten Conditions of Bai'at",short:"Bai'at",blurb:"What you promise when you join, one condition at a time.",hue:"pink",lessons:[
+L("What is Bai'at?","COB",[
+"Bai'at means handing your life over to Allah. The Promised Messiah(as) called it 'selling yourself' to God.",
+"The Holy Prophet(sa) took bai'at from his companions too, at 'Aqabah: not to associate partners with God, not to steal, commit adultery or slander, and to obey him in good.",
+"In 1888 God commanded the Promised Messiah(as) to take bai'at. He asked people first to pray for guidance (Istikharah).",
+"The first bai'at was on 23 March 1889 at the house of Sufi Ahmad Jan in Ludhiana. Hazrat Nooruddin(ra) pledged first."],
+["What is bai'at?","Which condition strikes you most, and why?","How did bai'at begin?"],{c:0}),
+L("Condition 1: No Shirk","COB",[
+"Shirk means associating anything with God. The Qur'an says God does not forgive it, though He forgives other sins (4:49).",
+"It isn't only idol worship. Relying totally on a boss, your children, your own cleverness or charms, or praying to the dead, are hidden forms of it.",
+"The Holy Prophet(sa) feared his followers would fall into hidden shirk, like doing good just to show off.",
+"True Tauhid (oneness) means your love, worship, hope and fear are directed to God alone."],
+["What is Shirk?","What does Allah not forgive?"],{c:1}),
+L("Condition 2: Truthfulness and Purity","COB",[
+"Falsehood is called the greatest evil. A man once promised the Prophet(sa) never to lie; that one promise led him to give up all his other sins.",
+"Don't even go near adultery (17:33). Avoid what leads to it, including unsuitable films.",
+"Men and women are both told to lower their gaze (24:31)."],
+["Why is falsehood the greatest of evils?","Why guard the eyes?"],{c:2}),
+L("Condition 2: Cruelty and Dishonesty","COB",[
+"Cruelty includes taking what belongs to others. The Prophet(sa) warned that someone with many prayers could still be bankrupt on Judgement Day because of how they treated people.",
+"Dishonesty in any form is forbidden, and so is defending the dishonest (4:108).",
+"Wickedness and immorality are made hateful to true believers (49:8)."],
+["What did the Prophet(sa) say about cruelty?","What does Allah say about dishonesty?"],{c:2}),
+L("Condition 2: Mischief and Desires","COB",[
+"Don't spread mischief on earth (28:78). The Promised Messiah(as) taught: bear abuse patiently and forgive rather than quarrel.",
+"Be loyal to the country and government you live under.",
+"Passion is like a flood that only God's mercy can hold back. Those not yet able to marry should practise self-control, for example by fasting."],
+["What does the Promised Messiah(as) advise about mischief and passions?"],{c:2}),
+L("Condition 3: Prayer and Tahajjud","COB",[
+"Pray the five daily prayers, in congregation where possible. Travel and illness allow shortening or combining, never skipping.",
+"Prayer is the first thing we'll be asked about on Judgement Day.",
+"Tahajjud, the late-night prayer, brings you close to God, guards against sin and heals faults. In the last third of the night God invites His servants to ask.",
+"The Promised Messiah(as) asked his followers to pray at least two rak'at of Tahajjud.",
+"Durud: whoever sends blessings on the Prophet(sa) receives ten blessings from God."],
+["Name two benefits of Tahajjud.","Why recite Durud regularly?"],{c:3}),
+L("Condition 3: Istighfar and Gratitude","COB",[
+"Istighfar means asking God's forgiveness. The Qur'an promises it brings rain, wealth and children (71:11–13), and a hadith says it opens a way out of every difficulty.",
+"The Promised Messiah(as) described two kinds: one that protects you from sins before they happen, and one that brings you back after a sin.",
+"Gratitude: if you can't thank God for small favours, you won't thank Him for big ones. Begin important things with praise of Allah."],
+["What is Istighfar, and what are its two types?","How does Allah treat the grateful?"],{c:3}),
+L("Condition 4: Do No Harm","COB",[
+"Never harm anyone, by tongue, hand or any other way, even when you're angry.",
+"The Qur'an praises those who hold back anger and forgive (3:135). A man asked the Prophet(sa) for advice; he said, twice, 'Don't get angry.'",
+"Abu Dharr(ra), when angry, would sit down and then lie down, as the Prophet(sa) advised.",
+"Avoid envy, malice and breaking off relations: 'be brothers'."],
+["What advice did the Prophet(sa) give about anger?","How can you calm anger?"],{c:4}),
+L("Condition 5: Faithful in Good Times and Bad","COB",[
+"Stay faithful to God whether life is easy or hard.",
+"A believer finds good in everything: gratitude in ease, patience in hardship. Every small hardship removes some sins.",
+"The Qur'an promises 'the soul at peace' entry into Allah's Garden (89:28–31)."],
+["What glad tidings does God give the steadfast?","What does the Prophet(sa) say about Muslims who suffer?"],{c:5}),
+L("Condition 5: Real Patience","COB",[
+"A grieving woman, not recognising the Prophet(sa), brushed off his advice to be patient. He taught that real patience is at the first shock of grief.",
+"Remember Allah in good times and He will be with you in hard times.",
+"Two early Ahmadi martyrs, Sahibzada Abdul Latif and Abdur Rahman Khan, refused to give up their bai'at even to save their lives."],
+["What did the Prophet(sa) tell the grieving woman?","Who showed perfect steadfastness?"],{c:5}),
+L("Condition 6: Leave Harmful Customs","COB",[
+"Customs that go against Islam should be left, like showing off at weddings, extravagant feasts, or displaying dowry, which push poorer families into debt.",
+"Only the bride's mehr (marriage gift) needs to be publicly announced.",
+"Every innovation added to religion is rejected. Reviving a true Sunnah brings reward."],
+["Name some harmful wedding customs.","How can you avoid innovations?"],{c:6}),
+L("Condition 6: The Qur'an as Your Guide","COB",[
+"The Qur'an is made easy to remember (54:18).",
+"A believer who reads the Qur'an and acts on it is like a citron: sweet to taste and fragrant.",
+"The Promised Messiah(as) taught that ignoring even one of its commands closes a door of salvation.",
+"Practical step from Hazrat Khalifatul Masih V(aba): read a few verses daily, then their translation."],
+["How can you bring the Qur'an into daily life?"],{c:6}),
+L("Condition 7: Give Up Pride","COB",[
+"Pride was Satan's downfall: he refused to bow to Adam.",
+"Three roots of sin: pride (Satan's refusal), greed (Adam eating from the tree) and envy.",
+"Pride shows up at home too, for example harshness toward a spouse or children.",
+"Don't walk on the earth, full of pride. Remove pride and fill the space with humility."],
+["Name the three roots of every sin.","Give examples of pride at home."],{c:7}),
+L("Condition 7: Pride After Shirk","COB",[
+"The Promised Messiah(as) said that after shirk, pride is the worst evil.",
+"Someone with pride the size of a mustard seed won't enter Paradise. Looking good isn't pride; rejecting truth and looking down on people is.",
+"Honour and greatness belong to God alone."],
+["After Shirk, what is the greatest evil?","What was the first sin?"],{c:7}),
+L("Condition 7: Humility","COB",[
+"Allah raises whoever is humble and lowers whoever is proud. Forgiving never lowers your honour.",
+"The servants of the Gracious walk humbly, and answer the ignorant with 'peace'.",
+"The Prophet(sa) prayed to live and die among the humble.",
+"Everyday pride to avoid: mocking others, refusing to listen, looking down on the poor."],
+["How does Allah raise a person's status?","What did the Promised Messiah(as) say about anger?"],{c:7}),
+L("Condition 8: Faith Above All","COB",[
+"Faith comes before life, wealth, honour and family.",
+"When alcohol was forbidden, the companions broke their wine jars immediately (Bukhari).",
+"Whoever fully submits to Allah has no fear or grief (2:113).",
+"Certainty of faith keeps you from sin, like knowing a snake is there keeps you away from it."],
+["How do we put faith first?","Why do perfect understanding and love matter?"],{c:8}),
+L("Condition 9: Serving Humanity","COB",[
+"Be good to parents, relatives, orphans, the needy, neighbours and travellers (4:37).",
+"The righteous feed the poor, the orphan and the prisoner for love of Allah, wanting no thanks (76:9).",
+"Help should be sincere: never give something worn out without cleaning and mending it."],
+["Whom does Allah tell us to treat kindly?","What should our intention be?"],{c:9}),
+L("Condition 9: All Creation is God's Family","COB",[
+"Visiting the sick, feeding the hungry and covering others' faults bring Allah's mercy.",
+"The Prophet(sa) said all creatures are God's family.",
+"There are two kinds of rights: those owed to God and those owed to people. Both are part of the pledge."],
+["What are the two categories of rights?","How can you ease someone's worries this week?"],{c:9}),
+L("Condition 9: Compassion in Action","COB",[
+"The Promised Messiah(as) stopped what he was doing to help people in need, and read an elderly woman's letter himself when someone was short with her.",
+"Ahmadis serve through schools and hospitals in Africa (the Nusrat Jehan Scheme) and through disaster relief.",
+"Hazrat Khalifatul Masih V(aba) asks every doctor, teacher and lawyer to use their skills for the needy."],
+["What habits block compassion?","Name a few ways of pleasing Allah."],{c:9}),
+L("Condition 10: The Bond of Obedience","COB",[
+"This bond with the Promised Messiah(as), carried on through his Khalifas, should be stronger than any family tie.",
+"Obedience is in what is good (Ma'ruf). A prophet or Khalifa only commands what is good; there is no obedience in disobeying God.",
+"Obedience should be practical, not just words (24:54)."],
+["What does 'obedience in everything good' mean?","What are the benefits of obeying the Khalifa?"],{c:10}),
+L("Condition 10: Examples of Obedience","COB",[
+"When Hazrat Umar(ra) replaced the great general Khalid bin Walid(ra) with Abu Ubaidah(ra), Khalid simply carried on serving under him.",
+"Companions of the Promised Messiah(as) gave up habits like smoking as soon as they knew he disliked them.",
+"The Promised Messiah(as) compared the Jama'at to a ship in a storm: those aboard are kept safe."],
+["What did Khalid bin Walid(ra) show?","Why give salaam to the Promised Messiah(as)?"],{c:10}),
+L("Condition 10: Who Enters the Jama'at","COB",[
+"Joining means leaving gossip, insults and fights, speaking the truth even in court, and treating everyone kindly.",
+"Obey those in authority in ease and hardship. Take any concern about a local leader to the Khalifa rather than complaining.",
+"Hazrat Khalifatul Masih V(aba) prays that every Ahmadi fulfils each condition as a duty."],
+["How should we treat leaders?","How do people behave once they join?"],{c:10})
+],quiz:[
+["Which condition is about Shirk?",["1","4","7","10"],0],
+["Which condition asks you to give up pride?",["2","5","7","9"],2],
+["Serving God's creation is the focus of condition…",["3","6","8","9"],3],
+["Condition 10 asks for obedience in…",["Everything good","Worldly matters only","Money only","Nothing"],0],
+["What are the three roots of sin?",["Pride, greed, envy","Anger, sleep, hunger","Lying, theft, laziness","None of these"],0]
+]},
+{id:"m7",no:7,title:"Why Ahmadiyyat is True",short:"Proofs",blurb:"The signs, prophecies and arguments from Invitation to Ahmadiyyat.",hue:"mint",lessons:[
+L("Argument 1: The Need of the Hour","ITA",[
+"God provides for every physical need, so He also provides for the soul's needs.",
+"The Qur'an says God doesn't punish a people without first sending a warner.",
+"Muslims had fallen into deep decline, so a reformer was needed, and he alone made this claim at that time."],
+["Why did Allah send the Promised Messiah(as)?"],{p:"ITA 58–66"}),
+L("God Protects the Qur'an","ITA",[
+"God promised to guard the Qur'an (15:10), in its words and in its meaning.",
+"Its words were protected through memorisation and the development of Arabic grammar.",
+"Its meaning is protected by reformers: the Prophet(sa) said one would come at the head of every century."],
+["What did Allah say about protecting the Qur'an?","What did the Prophet(sa) say about reformers?"],{p:"ITA 67–70",refs:[Q("15:10")]}),
+L("The State of Muslims","ITA",[
+"Prayers were neglected and mosques empty; Zakat was paid unwillingly.",
+"The Qur'an was kept in beautiful covers but rarely read or understood.",
+"The book argues this matches what the Holy Prophet(sa) foretold about the Latter Days."],
+["What condition were Muslims in?","How was the Qur'an treated?"],{p:"ITA 70–77"}),
+L("Argument 2: The Prophet's(sa) Testimony","ITA",[
+"Belief in a returning Messiah existed long before Islam.",
+"The Prophet(sa) linked Islam's triumph to the Messiah's time and said nothing could defeat an ummah with himself at one end and the Messiah at the other.",
+"Prophecies are designed so sincere seekers recognise them; signs must be looked at together, like describing a person."],
+["How important is the second coming in Islam?","Do only prophets receive revelation?"],{p:"ITA 78–82"}),
+L("Signs: the State of Religion","ITA",[
+"A Hadith said that in the Latter Days most people would be 'Romans', meaning Christians, and Christian powers would rule much of the world. This came true.",
+"The Promised Messiah's(as) time saw Islam in retreat and Christianity spreading quickly."],
+["What was the state of religion in his time?","Where do we find the signs?"],{p:"ITA 83–87"}),
+L("Signs: Faith and Morals","ITA",[
+"Prophecies spoke of people denying fate, treating Zakat as a fine, and loving the world more than faith.",
+"They also foretold a rise in immorality, alcohol and gambling, and children obeying friends over parents."],
+["What was the state of morals in his time?"],{p:"ITA 87–96"}),
+L("Signs: Knowledge, Society and Plague","ITA",[
+"Religious knowledge would be lifted while worldly knowledge grew.",
+"Scholars would seek the rich; leaders would be chosen for speeches, not faith.",
+"A plague would strike in the Latter Days. The book links this to the plague in India and to epidemics like the 1918 flu."],
+["What was the state of the Ulema?","What was foretold about women and society?"],{p:"ITA 96–102"}),
+L("Signs: Transport, Money and Politics","ITA",[
+"Camels would be abandoned: the book points to cars, trains and steamships, a 'donkey' that crosses land and sea fed with 'stone' (coal).",
+"Gold and silver would become abundant, and interest-based banking would spread everywhere.",
+"Iraq, Syria and Egypt would split away and fall into disorder, as happened after the Ottoman Empire."],
+["What did the Prophet(sa) foretell about transport?","About Iraq, Syria and Egypt?"],{p:"ITA 103–109"}),
+L("Signs in the Sky: the Eclipses","ITA",[
+"A Hadith said the Mahdi's sign would be an eclipse of the moon on the first of its nights and of the sun in the middle of its days, in Ramadan.",
+"In Ramadan 1311 AH (1894) a lunar eclipse fell on the 13th and a solar eclipse on the 28th, during the life of the claimant.",
+"Many earthquakes also fit the prophecies of the earth 'sinking'."],
+["Which unique event was foretold for the Mahdi?","What do the eclipses teach us?"],{p:"ITA 109–115"}),
+L("Who is the Dajjal?","ITA",[
+"The book explains the Dajjal is not one man but a symbol for the great missionary movement of Christian nations.",
+"The Prophet(sa) advised reciting the first ten verses of Surah Al-Kahf as protection; they answer the belief that God has a son.",
+"Features like the one eye and the donkey are read symbolically."],
+["Which verses protect against Dajjal?","Is Dajjal a single person?"],{p:"ITA 116–120",refs:[Q("18:2")]}),
+L("Argument 3: Personal Purity","ITA",[
+"The first proof of a true claimant is his own character. The Qur'an makes this argument for the Holy Prophet(sa): 'I lived among you a lifetime before this' (10:17).",
+"Abu Bakr, Khadijah, Ali and Zaid(ra) believed because they knew his character.",
+"Those who knew the Promised Messiah(as) before his claim, including later opponents, praised his honesty. No one could point to a moral flaw."],
+["What convinced the first Muslims?","How does character prove a claim?"],{p:"ITA 121–128"}),
+L("Argument 4: Islam's Triumph","ITA",[
+"The Qur'an promises Islam will prevail over all religions (61:10), a task given to the Promised Messiah.",
+"He argued Jesus survived the cross (like Jonah in the whale) and travelled east to find the lost sheep of Israel. A tomb in Srinagar, Kashmir is identified as his.",
+"Barahin-e-Ahmadiyya offered Rs 10,000 to anyone who could match its arguments for Islam; no one did."],
+["How is the sign of Jonah like the sign of Jesus?","When was Islam's triumph due?"],{p:"ITA 129–134",refs:[SRC.JII]}),
+L("The Promised One of All Religions","ITA",[
+"Many religions await a reformer in the Latter Days. He claimed to be that one: the Messiah for Christians and Jews, and Krishna for Hindus.",
+"The book argues Guru Nanak, founder of Sikhism, was a Muslim at heart, citing his cloak inscribed with Qur'anic verses."],
+["Are only Muslims waiting for a Messiah?","Was Guru Nanak a Muslim?"],{p:"ITA 135–140"}),
+L("A New Way of Debating","ITA",[
+"He taught that every religion must back its claims with its own scripture, and that a true religion produces living spiritual results.",
+"He accepted that God sent prophets to all nations, so you can respect other faiths' founders while inviting people to Islam."],
+["How did he change religious debates?","How should religions treat each other?"],{p:"ITA 140–146"}),
+L("A Living Religion","ITA",[
+"A living religion is one where God still answers prayers and speaks to His servants.",
+"He challenged leaders of other faiths, including the Bishop of Lahore, to show their prayers were accepted as clearly. None took up the challenge."],
+["What are the signs of a living religion?","How was the Bishop challenged?"],{p:"ITA 147–155"}),
+L("Argument 5: Reviving Tauhid","ITA",[
+"The Prophet(sa) foretold Islam would become 'only a name' and split into 73 sects, with one on the truth.",
+"Practices like praying to the dead or bowing at graves had crept in; he called people back to pure Tauhid.",
+"Believing Jesus lives in heaven, created birds and raised the dead gives him powers belonging to God alone."],
+["How does belief in a living Jesus conflict with Tauhid?","What happened at the tombs of holy people?"],{p:"ITA 155–163"}),
+L("Angels and the Qur'an","ITA",[
+"Angels never disobey God (66:7). Stories like Harut and Marut sinning, or Satan being an angel, are wrong.",
+"Angels are spiritual beings working through God's laws, like the sun spreading light while staying in place.",
+"Myths that verses were lost, cancelled or tampered with are rejected: the Qur'an is complete and protected."],
+["What misconceptions existed about angels and the Qur'an?"],{p:"ITA 163–168"}),
+L("Qur'an, Hadith and Old Stories","ITA",[
+"Hadith is always subordinate to the Qur'an.",
+"'Israelite stories' are legends from older traditions that entered Muslim books, often attacking the prophets' character. He rejected them.",
+"Revelation hasn't ended: God still speaks to His servants."],
+["What is the authority of Hadith compared to the Qur'an?","What are Israelite stories?"],{p:"ITA 169–176"}),
+L("Prophets, Heaven and Hell","ITA",[
+"All prophets were sinless; stories of their wrongdoing are false.",
+"Paradise is mainly spiritual joy, growing ever closer to God, not just physical pleasure.",
+"Hell is not eternal; God's mercy embraces everything (7:157)."],
+["How had beliefs in prophets been corrupted?","What is Heaven like?"],{p:"ITA 176–184"}),
+L("Why Wait for Another?","ITA",[
+"He corrected both belief and practice, showing Islam in its original purity, which is exactly the Messiah's task.",
+"If the work is done, there's no need to wait for someone else.",
+"God helps those who are truthful in their claims."],
+["Is there a need for someone else to come?","Who does Allah help?"],{p:"ITA 184–190"}),
+L("Argument 6: Divine Help","ITA",[
+"God helps His messengers and disgraces those who invent lies against Him (58:22, 69:45–47).",
+"He had no wealth, title or following, and was opposed by clerics, rulers and other faiths. Yet his community spread worldwide.",
+"Universal opposition plus success against the odds shows God's hand."],
+["How does Allah treat His chosen ones?","What does universal opposition prove?"],{p:"ITA 190–199"}),
+L("Argument 7: Opponents Humbled","ITA",[
+"He received the revelation: 'I will humiliate whoever seeks to humiliate you.'",
+"Chiragh Din and Maulvi Ghulam Dastgir, who prayed for his destruction, died of plague.",
+"Faqir Mirza predicted his death by a certain date; it didn't happen, and Faqir Mirza died instead."],
+["What happens to the enemies of prophets?","What happened to his opponents?"],{p:"ITA 200–207"}),
+L("Argument 8: Helped by Angels","ITA",[
+"Angels help every true prophet. At Badr, the wind and fear struck the enemy.",
+"He was warned of a roof about to fall and left just before it collapsed.",
+"In the great plague he was told his household would be protected: around a hundred people in his home, and none were struck."],
+["What role do angels play?","What happened to his household in the plague?"],{p:"ITA 208–217"}),
+L("Argument 9: Special Knowledge","ITA",[
+"Critics said he lacked formal Arabic training. The book says God taught him some 40,000 Arabic root words in one night.",
+"He wrote books in Arabic and offered rewards to anyone who could match them; no one did.",
+"On Eid-ul-Adha he delivered a sermon in Arabic by revelation, the Khutba Ilhamiyya. He also taught that Arabic is the mother of all languages."],
+["In which language was a sermon revealed to him?","Why does Arabic matter?"],{p:"ITA 218–226"}),
+L("Prophecies in the Qur'an","ITA",[
+"He set out principles about the Qur'an: its order never changes, it has layers of meaning, and it is a complete guide.",
+"When one part raises a doubt, another part of the Qur'an explains it.",
+"He applied the Hadith about a man of Persian descent restoring faith to himself."],
+["Which Qur'anic prophecies do you know?","Where do we find answers to doubts?"],{p:"ITA 226–233"}),
+L("Al-Fatiha, a Summary of the Qur'an","ITA",[
+"He showed that Al-Fatiha contains the whole Qur'an in summary: praise, God's attributes, worship, and the prayer for guidance.",
+"Its prayer for 'the path of those You have blessed' points to the ranks still open to believers.",
+"Ahmadis' first martyrs were Maulvi Abdur Rahman and Sahibzada Abdul Latif, killed in Afghanistan."],
+["What is the significance of Al-Fatiha?","Who were the first Ahmadi martyrs?"],{p:"ITA 234–240",refs:[Q("1:1")]}),
+L("Prophecies: Afghanistan and Iran","ITA",[
+"A revelation spoke of 'two goats' slaughtered. Two faithful followers were later killed in Afghanistan, and cholera struck Kabul soon after.",
+"On 15 January 1906 he received: 'the palace of Chosroes has been shaken.' Iran's revolution followed, and by July 1909 the Shah had lost power."],
+["Which prophecy was fulfilled in Afghanistan?","And in Iran?"],{p:"ITA 241–246"}),
+L("Prophecy: Abdullah Atham","ITA",[
+"Atham, a Christian preacher, debated him in Amritsar for 15 days.",
+"The prophecy: the side deliberately holding a false position would be struck within 15 months, unless he turned back.",
+"Atham stopped attacking Islam and showed signs of fear and repentance. He refused to swear an oath that he hadn't been shaken, even for Rs 4,000."],
+["What do you know about Abdullah Atham?","How was this a sign?"],{p:"ITA 247–252"}),
+L("Prophecy: Alexander Dowie","ITA",[
+"Dowie, an American preacher, claimed to be a forerunner of Christ and predicted Islam's destruction.",
+"In 1902 the Promised Messiah(as) challenged him to a prayer-duel; Dowie refused and cursed Islam.",
+"Dowie was paralysed, deposed by his own followers for misusing money, and died on 9 March 1907 with only a few followers left."],
+["Who was Alexander Dowie?","Why did Dowie seem likely to outlive him?"],{p:"ITA 252–258"}),
+L("Prophecy: Lekh Ram","ITA",[
+"Lekh Ram, an Arya Samaj leader, attacked Islam and the Holy Prophet(sa) harshly.",
+"In 1893 a prophecy said he would die within six years, on a day near Eid.",
+"He was killed the day after Eid-ul-Fitr in 1897."],
+["Who was Lekh Ram?","What was his attitude to Islam?"],{p:"ITA 258–263"}),
+L("The Plague and the Earthquake","ITA",[
+"He dreamt of black seedlings planted across Punjab and warned a plague was coming. It lasted years, killing up to 30,000 a week.",
+"He foretold a great earthquake. On 4 April 1905 the Kangra earthquake killed about 20,000, destroying resorts and barracks: the 'temporary dwellings' of the prophecy."],
+["What was the plague prophecy?","How was the earthquake prophecy fulfilled?"],{p:"ITA 263–268"}),
+L("Prophecy: the First World War","ITA",[
+"1905 revelations spoke of a terrible 'earthquake'. The Qur'an uses 'earthquake' for war (33:12).",
+"The book matches details to the First World War (1914–18): global scale, harm to travellers and fields, and nations shaken."],
+["Which prophecy was fulfilled in WWI?"],{p:"ITA 268–275"}),
+L("The World War and the Czar","ITA",[
+"The prophecy foretold the Czar would be in a pitiable state.",
+"The Czar fell in March 1917 and was executed in July 1918.",
+"Other details matched the Arab revolt against Turkey and the Balfour Declaration."],
+["What happened to the Czar?"],{p:"ITA 276–282"}),
+L("Qadian and Financial Help","ITA",[
+"He foretold Qadian, a remote village of about 2,000 with no railway, would grow into a great town. It gained schools, a college, presses and a post office.",
+"When his father died he received 'Is not Allah sufficient for His servant?' Funds for books, guests and missions came, against all expectation."],
+["How did Qadian grow?","What did Allah reveal about help?"],{p:"ITA 282–289"}),
+L("The Community Will Spread","ITA",[
+"Revelations promised his message would reach the ends of the earth and visitors would come by every road.",
+"He was a little-known man in an Indian village; today the Community is on every continent."],
+["What was revealed about the spread of Ahmadiyyat?"],{p:"ITA 289–293"}),
+L("Argument 11: Love of God","ITA",[
+"True love of God and the Holy Prophet(sa) is shown through action and sacrifice.",
+"He spent his youth in worship, turned down a government post, and spent his life defending Islam in over 80 books.",
+"He was deeply pained by the state of Islam and its scholars."],
+["What do you know about his love of God?"],{p:"ITA 294–300"}),
+L("Love of the Holy Prophet(sa)","ITA",[
+"His love for the Holy Prophet(sa) shines through his poetry and writing.",
+"When Islam and its Prophet(sa) were attacked, he answered with argument, not anger or force.",
+"A follower said his example made him send Durud before sleeping every night."],
+["How did he show love for the Holy Prophet(sa)?"],{p:"ITA 300–307"}),
+L("Argument 12: Life-Giving Powers","ITA",[
+"A prophet's real miracle is bringing spiritually dead people to life.",
+"His followers became prayerful, educated and willing to sacrifice, serving as missionaries around the world.",
+"Ahmadis bear persecution for the sake of their faith."],
+["What changes did he bring in his companions?"],{p:"ITA 308–315"}),
+L("The Messiah Has Come","ITA",[
+"The book closes: anyone who reflects honestly on these twelve arguments should accept him, and there's no point waiting for another.",
+"Rejecting him, with these proofs, would mean doubting earlier prophets too.",
+"The future: the Community will grow and Islam will prevail through peace and argument."],
+["How did Allah and His Prophet(sa) testify the Messiah has come?","What is the future of Ahmadiyyat?"],{p:"ITA 319–328"})
+],quiz:[
+["Who wrote Invitation to Ahmadiyyat?",["The Promised Messiah(as)","Hazrat Mirza Bashir-ud-Din Mahmud Ahmad(ra)","Hazrat Mirza Masroor Ahmad(aba)","Hazrat Nooruddin(ra)"],1],
+["What is the first proof of a true claimant?",["Wealth","His own character","Family","Number of followers"],1],
+["In which year did the Ramadan eclipses occur?",["1835","1889","1894","1908"],2],
+["Who is the 'American impostor'?",["Abdullah Atham","Lekh Ram","Alexander Dowie","Chiragh Din"],2],
+["Where does the book say Jesus(as) is buried?",["Jerusalem","Srinagar, Kashmir","Damascus","Qadian"],1],
+["What reward did Barahin-e-Ahmadiyya offer?",["Rs 100","Rs 1,000","Rs 10,000","Nothing"],2]
+]},
+{id:"m8",no:8,title:"Waqf-e-Jadid",short:"Giving",blurb:"Why this scheme started, what it does, and how everyone can take part.",hue:"peach",lessons:[
+L("Waqf-e-Jadid: How it Began","SYL",[
+"Hazrat Musleh Maud(ra) began Waqf-e-Jadid ('the New Dedication') on Friday 27 December 1957, after seeing poor religious training in rural Pakistan after Partition.",
+"It fulfilled a wish the Promised Messiah(as) wrote of in The Victory of Islam: teachers reaching every part of the land.",
+"Its first director was Hazrat Mirza Tahir Ahmad(rh). Trained teachers (Muallimeen) were sent to villages.",
+"In 1986 Khalifatul Masih IV(rh) opened it to the whole world. It now funds schools, clinics and teachers in remote areas, for people of every faith."],
+["When and by whom was it founded?","Why was it started?","What is its main aim?"],{p:"Appendix 2, pp. 45–48",refs:[SRC.VOI]}),
+L("Waqf-e-Jadid: Everyone Can Take Part","SYL",[
+"There is no fixed amount: since 1984 members give whatever they can, and children take part too.",
+"Daftar Atfal, started by Khalifatul Masih III(rh), invites children under 15 to give.",
+"The Waqf-e-Jadid year runs from 1 January to 31 December.",
+"The syllabus shares stories of new Ahmadis in Russia, Mali, Ivory Coast, Sierra Leone and Switzerland who felt their lives were blessed after giving.",
+"'Spend in His cause; it will be good for yourselves' (64:17)."],
+["Who should take part, and how much?","Do you remember a story of the blessings of giving?"],{p:"Appendix 2, pp. 49–54",refs:[Q("64:17")]})
+],quiz:[
+["When was Waqf-e-Jadid begun?",["1889","1957","1987","2003"],1],
+["Who was its first director?",["Hazrat Mirza Tahir Ahmad(rh)","Hazrat Nooruddin(ra)","Hazrat Mirza Nasir Ahmad(rh)","Sir Zafrulla Khan"],0],
+["Who opened it to the whole world?",["Khalifatul Masih II","Khalifatul Masih III","Khalifatul Masih IV","Khalifatul Masih V"],2],
+["How much must you give?",["A fixed amount","Whatever you can","Nothing","One-tenth"],1]
+]}
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS=[
+["Tauhid","The oneness of God"],["Shirk","Associating anything with God"],["Iman","Faith: the six articles of belief"],
+["Salat","The five daily prayers"],["Rak'at","One unit of prayer: standing, bowing and two prostrations"],["Wudu","Washing before prayer"],
+["Adhan","The call to prayer"],["Iqamah","The short call just before prayer begins"],["Qiblah","The direction of prayer, toward the Ka'bah"],
+["Tahajjud","The voluntary late-night prayer"],["Witr","Three rak'at prayed after Isha"],["Durud","Sending blessings on the Holy Prophet(sa)"],
+["Istighfar","Asking God's forgiveness"],["Zakat","Charity of one-fortieth of savings held a year"],["Hadith","A report of the Holy Prophet's(sa) words or actions"],
+["Sunnah","The Holy Prophet's(sa) practice"],["Bai'at","The pledge of allegiance; 'selling oneself' to God"],["Khalifa","A successor who carries on a prophet's mission"],
+["Khilafat","The institution of successorship; the 'second manifestation'"],["Mahdi","'The guided one', the reformer foretold for the Latter Days"],
+["Mujaddid","A reformer sent at the head of each century"],["Nuzul","'Descent': coming with great significance, not from the sky"],
+["Khatam an-Nabiyyin","Seal of the Prophets (33:41)"],["Dajjal","A symbol of the great anti-Islamic forces of the Latter Days"],
+["Chanda","Donations to the Jama'at"],["Lajna Ima'illah","The women's auxiliary, 15 and over"],["Al-Fatiha","The Opening chapter, recited in every rak'at"],
+["Musleh Maud","'The Promised Reformer': Khalifatul Masih II(ra)"],["Qadian","Birthplace of the Promised Messiah(as) in India"],["Ummah","The worldwide Muslim community"]
+];
+
+/* ================= SETUP ================= */
+MODS.forEach(m=>m.lessons.forEach((l,i)=>{l.n_=l.n;l.id=m.id+"c"+(i+1);l.n=i+1;l.m=m;}));
+const ALL=MODS.flatMap(m=>m.lessons);
+const TOTAL=ALL.length;
+const STAR='<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1l3.2 4.9 5.6-.8-.8 5.6L23 12l-3 1.3.8 5.6-5.6-.8L12 23l-3.2-4.9-5.6.8.8-5.6L1 12l3-1.3-.8-5.6 5.6.8z"/></svg>';
+
+/* ================= STATE ================= */
+const DEF={done:{},notes:{},yq:{},quiz:{},ten:{},streak:{last:"",count:0},best:0};
+const LS="tarbiyyat-path-v2";
+let S=clone(DEF);
+function clone(o){return JSON.parse(JSON.stringify(o));}
+try{const r=localStorage.getItem(LS)||localStorage.getItem("tarbiyyat-path-v1");if(r)S=Object.assign(clone(DEF),JSON.parse(r));}catch(e){}
+let cloud=null,saveT=null;
+function save(){
+  try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
+  if(!cloud)return;
+  clearTimeout(saveT);
+  saveT=setTimeout(async()=>{try{await cloud.set({...S,updatedAt:Date.now()});setSaved("Synced to your account. It works on your phone and computer.",true);}catch(e){setSaved("Couldn't reach your account just now. Progress is kept on this device.",false);}},700);
+}
+let syncMsg="Saved on this device only.",synced=false;
+function setSaved(t,ok){syncMsg=t;if(ok!==undefined)synced=ok;document.getElementById("saved").textContent=t;const el=document.getElementById("syncline");if(el){el.textContent=(synced?"✓ ":"")+t;el.className="chip "+(synced?"mint":"peach");}}
+function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function bump(){const t=ymd(new Date());if(S.streak.last===t)return;const y=new Date();y.setDate(y.getDate()-1);S.streak={last:t,count:S.streak.last===ymd(y)?S.streak.count+1:1};}
+
+/* ================= HELPERS ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const hon=s=>esc(s).replace(/\((sa|as|ra|rh|aba)\)/g,"<sup>$1</sup>");
+const doneN=()=>ALL.filter(l=>S.done[l.id]).length;
+const mStat=m=>({d:m.lessons.filter(l=>S.done[l.id]).length,t:m.lessons.length});
+const nextLesson=()=>ALL.find(l=>!S.done[l.id]);
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("show"),2300);}
+function confetti(n=46){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const cols=["#7C5CE6","#E0628F","#26A37D","#E5874A","#E3A72A","#AB90FF"];
+  for(let i=0;i<n;i++){const s=document.createElement("span");s.className="confetti";s.style.left=Math.random()*100+"vw";s.style.background=cols[i%cols.length];
+    s.style.setProperty("--dx",(Math.random()*160-80)+"px");s.style.setProperty("--rot",(Math.random()*720-360)+"deg");s.style.animationDelay=Math.random()*.3+"s";
+    if(i%3===0)s.style.borderRadius="50%";document.body.appendChild(s);setTimeout(()=>s.remove(),2200);}
+}
+function bar(p,cls=""){return '<div class="bar '+cls+'"><i data-w="'+p+'"></i></div>';}
+function animateBars(){requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll(".bar i[data-w]").forEach(i=>i.style.width=i.dataset.w+"%")));}
+function srcLink(k){const s=SRC[k];return s?'<a href="'+s[1]+'" target="_blank" rel="noopener">'+hon(s[0])+'</a>':"";}
+function refChip(r){return '<a class="ref" href="'+r[1]+'" target="_blank" rel="noopener">'+STAR.replace('width="18" height="18"','width="14" height="14"')+hon(r[0])+'</a>';}
+const V=()=>$("#view");
+function go(h){if(location.hash==="#"+h)route();else location.hash=h;}
+
+/* ================= HOME ================= */
+function home(){
+  const n=doneN(),pct=Math.round(n/TOTAL*100),nx=nextLesson();
+  const C=2*Math.PI*56,off=C*(1-n/TOTAL);
+  const passed=MODS.filter(m=>(S.quiz[m.id]||0)>=.8).length;
+  V().innerHTML=
+  '<header class="hero"><div class="bism" lang="ar">بِسۡمِ اللّٰہِ الرَّحۡمٰنِ الرَّحِیۡمِ</div><h1>Tarbiyyat Path</h1><p id="hello">Learn Islam Ahmadiyyat one small lesson at a time. Read the lesson, think about it, tap Done. That\'s it.</p></header>'
+  +'<section class="card stack"><div class="home-top"><div class="ring"><svg viewBox="0 0 132 132"><circle class="track" cx="66" cy="66" r="56" fill="none" stroke-width="14"/><circle class="fill" cx="66" cy="66" r="56" fill="none" stroke-width="14" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+C+'" data-off="'+off+'"/></svg><div class="num"><div><b>'+pct+'%</b><span>'+n+' of '+TOTAL+'</span></div></div></div>'
+  +'<div class="stack" style="gap:10px"><h2 style="font-size:1.5rem">'+(n===0?"Ready when you are":nx?"Keep going, you're doing great":"Alhamdulillah, all done!")+'</h2><div class="chips"><span class="chip">🔥 '+S.streak.count+' day streak</span><span class="chip pink">'+passed+' of 8 checkpoints</span><span class="chip mint">'+Object.values(S.ten).filter(Boolean).length+' of 10 conditions</span></div></div></div>'
+  +(nx?'<button class="btn big" id="cont">'+(n?"Continue: ":"Start: ")+hon(nx.t)+' →</button><div class="muted" style="text-align:center;font-size:.9rem;margin-top:-6px">Module '+nx.m.no+' · Lesson '+nx.n+' of '+nx.m.lessons.length+'</div>':'')
+  +'<div style="text-align:center"><span id="syncline" class="chip '+(synced?'mint':'peach')+'">'+(synced?'✓ ':'')+esc(syncMsg)+'</span></div></section>'
+  +'<section class="card stack" style="background:linear-gradient(135deg,var(--violet-soft),var(--pink-soft))"><div class="row" style="justify-content:space-between"><div><h2 style="font-size:1.35rem">Practice</h2><p class="muted">Quick quizzes and flashcards to help it stick.</p></div><button class="btn pink" id="prac">Practise</button></div></section>'
+  +'<section class="stack"><h2 style="font-size:1.6rem;padding-top:10px">Your journey</h2><div class="path">'
+  +MODS.map(m=>{const s=mStat(m),done=s.d===s.t;return '<button class="stone h-'+m.hue+'" data-m="'+m.id+'"><span class="pebble'+(done?" done":"")+'">'+(done?"✓":m.no)+'</span><span class="stone-body"><h3>'+hon(m.title)+'</h3><p>'+hon(m.blurb)+'</p><span class="stone-meta">'+bar(Math.round(s.d/s.t*100),"thin")+'<span>'+(done?"Complete":s.d?s.d+" of "+s.t:s.t+" lessons")+'</span></span></span></button>';}).join("")
+  +'<button class="stone h-pink" data-m="baiat"><span class="pebble'+(Object.values(S.ten).filter(Boolean).length===10?" done":"")+'">✦</span><span class="stone-body"><h3>Preparing for Bai\'at</h3><p>The ten conditions in plain words, and what joining involves.</p></span></button>'
+  +'</div></section>'
+  +'<section class="card stack"><h2 style="font-size:1.35rem">Use it on your phone and computer</h2><p class="muted">This is your personal link. Open it on any device and your progress follows you. Keep it to yourself, like a key.</p><div class="row" style="align-items:flex-start;gap:18px"><div id="qr" style="background:#fff;border-radius:18px;padding:8px;line-height:0;max-width:100%" aria-label="QR code of your personal link"></div><div class="stack" style="gap:10px;flex:1;min-width:200px"><code id="mylink" style="word-break:break-all;font-size:.85rem;background:var(--card2);padding:10px 12px;border-radius:14px"></code><button class="btn ghost" id="cpy">Copy my link</button><p class="muted" style="font-size:.88rem">On your phone: scan the code with the camera, then add it to your home screen.</p></div></div><details><summary class="link">Started on another device? Paste that link</summary><div class="stack" style="gap:10px;margin-top:10px"><textarea id="codein" style="min-height:60px" placeholder="Paste your personal link here"></textarea><button class="btn" id="codego">Use this link</button></div></details></section>';
+  if(nx)$("#cont").onclick=()=>go(nx.id);
+  $("#mylink").textContent=myLink();
+  try{const q=qrcode(0,"M");q.addData(myLink());q.make();$("#qr").innerHTML=q.createSvgTag({cellSize:4,margin:2});}catch(e){$("#qr").hidden=true;}
+  $("#cpy").onclick=async()=>{try{await navigator.clipboard.writeText(myLink());toast("Link copied.");}catch(e){const r=document.createRange();r.selectNodeContents($("#mylink"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);toast("Link selected. Copy it.");}};
+  $("#codego").onclick=()=>{const m=$("#codein").value.match(/[?&]u=([a-f0-9]{32})/);if(!m){toast("That doesn't look like your link. Copy the whole link and try again.");return;}
+    try{localStorage.setItem("tp-uid",m[1]);}catch(e){}location.href=location.pathname+"?u="+m[1];};
+  $("#prac").onclick=()=>go("practice");
+  V().querySelectorAll(".stone").forEach(b=>b.onclick=()=>go(b.dataset.m));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{const f=V().querySelector(".ring .fill");if(f)f.style.strokeDashoffset=f.dataset.off;}));
+  animateBars();
+}
+
+/* ================= MODULE ================= */
+function moduleView(id){
+  const m=MODS.find(x=>x.id===id);const s=mStat(m);const nx=m.lessons.find(l=>!S.done[l.id]);
+  V().innerHTML='<div class="row" style="padding-top:22px"><button class="link" id="back">‹ Home</button></div>'
+  +'<section class="mhead h-'+m.hue+'"><span class="pebble'+(s.d===s.t?" done":"")+'">'+(s.d===s.t?"✓":m.no)+'</span><div class="stack" style="gap:6px"><span class="label">Module '+m.no+'</span><h2 style="font-size:clamp(1.7rem,6vw,2.2rem);line-height:1.1">'+hon(m.title)+'</h2></div></section>'
+  +'<section class="card stack"><p>'+hon(m.blurb)+'</p>'+bar(Math.round(s.d/s.t*100))+'<div class="row" style="justify-content:space-between"><span class="muted" style="font-weight:700">'+s.d+' of '+s.t+' lessons done</span>'+(nx?'<button class="btn" id="mgo">'+(s.d?"Continue":"Start")+' →</button>':'<button class="btn pink" id="mq">Take the checkpoint</button>')+'</div></section>'
+  +'<section class="lessons">'+m.lessons.map(l=>'<button class="lrow'+(S.done[l.id]?" done":"")+(nx===l?" next":"")+'" data-l="'+l.id+'"><span class="dot">'+(S.done[l.id]?"✓":l.n)+'</span><span class="t">'+hon(l.t)+'</span><span class="go">›</span></button>').join("")+'</section>'
+  +'<section class="card stack" id="quiz"></section>';
+  $("#back").onclick=()=>go("");
+  if(nx)$("#mgo").onclick=()=>go(nx.id); else $("#mq").onclick=()=>$("#quiz").scrollIntoView({behavior:"smooth"});
+  V().querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>go(b.dataset.l));
+  quizInto($("#quiz"),m.quiz.map(q=>({q:q[0],o:q[1],a:q[2]})),"Module "+m.no+" checkpoint",sc=>{if(sc>(S.quiz[m.id]||0)){S.quiz[m.id]=sc;bump();save();}if(sc>=.8){confetti();toast("Checkpoint passed!");}});
+  animateBars(); window.scrollTo({top:0});
+}
+
+/* ================= LESSON ================= */
+function lessonView(id){
+  const l=ALL.find(x=>x.id===id);const m=l.m;const s=mStat(m);const done=!!S.done[l.id];const x=l.x;
+  let h='<div class="crumbs" style="padding-top:22px"><button class="link" id="back">‹ '+hon(m.title)+'</button><span class="label">Lesson '+l.n+' of '+m.lessons.length+'</span></div>'
+  +'<div>'+bar(Math.round(s.d/s.t*100),"thin")+'</div>'
+  +'<h1 class="lesson-title">'+hon(l.t)+'</h1>';
+  let body='';
+  if(x.c) body+='<div class="cond"><span class="label">Condition '+x.c+' in plain words</span><b>'+hon(TEN[x.c-1])+'</b></div>';
+  if(x.c===0) body+='<div class="cond"><span class="label">The ten conditions</span><b>Each of the next lessons explains one condition. You can see all ten together in Preparing for Bai\'at.</b></div>';
+  body+='<ul class="notes">'+l.n_.map(t=>'<li>'+STAR+'<span>'+hon(t)+'</span></li>').join("")+'</ul>';
+  if(x.yq) body+='<div class="label">Tap each lesson as you finish it · <span id="yqn">'+Object.values(S.yq).filter(Boolean).length+'</span>/40</div><div class="yq">'+Array.from({length:40},(_,i)=>'<button data-y="'+(i+1)+'" class="'+(S.yq[i+1]?"on":"")+'" aria-pressed="'+(!!S.yq[i+1])+'">'+(i+1)+'</button>').join("")+'</div>';
+  const refs=(x.refs||[]).slice(); if(x.quran) refs.unshift(["Read & listen to it on alislam.org","https://www.alislam.org/quran/app/"+x.quran]);
+  if(refs.length) body+='<div class="refs">'+refs.map(refChip).join("")+'</div>';
+  h+='<section class="card stack"><span class="label">Learn</span>'+body+'</section>';
+  h+='<section class="card think"><span class="label">Think about it</span><ol>'+l.q.map(q=>'<li>'+hon(q)+'</li>').join("")+'</ol>'
+   +'<details'+(S.notes[l.id]?" open":"")+'><summary class="link" style="margin-top:6px">✎ Write your thoughts (optional)</summary><textarea id="note-'+l.id+'" placeholder="Answer in your own words, or note a question to ask.">'+esc(S.notes[l.id]||"")+'</textarea></details></section>';
+  h+='<section class="stack">'+(x.yq?'':'<button class="btn big" id="done">'+(done?"Next lesson →":(m.id==="m4"?"I've memorised it ✓":"Done, next lesson →"))+'</button>')
+   +'<div class="row" style="justify-content:space-between"><button class="link" id="prev">‹ Previous</button>'+(done&&!x.yq?'<button class="link" id="undo">Mark as not done</button>':'')+(x.yq?'<button class="link" id="skipnext">Next lesson ›</button>':'')+'</div>'
+   +'<p class="src">Based on '+srcLink(l.s)+(x.p?' · syllabus reading: '+esc(x.p):'')+'</p></section>';
+  V().innerHTML=h;
+  $("#back").onclick=()=>go(m.id);
+  const ta=$("#note-"+l.id); if(ta) ta.oninput=()=>{S.notes[l.id]=ta.value;save();};
+  const idx=ALL.indexOf(l);
+  $("#prev").onclick=()=>go(idx>0?ALL[idx-1].id:m.id);
+  if($("#undo"))$("#undo").onclick=()=>{delete S.done[l.id];save();lessonView(l.id);};
+  if($("#skipnext"))$("#skipnext").onclick=()=>advance(l);
+  if($("#done"))$("#done").onclick=()=>{
+    const was=done; S.done[l.id]=true; bump(); save();
+    if(!was){confetti(28);toast("Lesson done · "+doneN()+" of "+TOTAL);}
+    advance(l,!was);
+  };
+  V().querySelectorAll("[data-y]").forEach(b=>b.onclick=()=>{const k=b.dataset.y;S.yq[k]=!S.yq[k];b.classList.toggle("on",S.yq[k]);b.setAttribute("aria-pressed",S.yq[k]);
+    const n=Object.values(S.yq).filter(Boolean).length;$("#yqn").textContent=n;const was=!!S.done[l.id];S.done[l.id]=n===40;if(!S.done[l.id])delete S.done[l.id];bump();save();
+    if(n===40&&!was){confetti();toast("All 40 lessons finished. Mashallah!");}});
+  animateBars(); window.scrollTo({top:0});
+}
+function advance(l,justDone){
+  const m=l.m,s=mStat(m);
+  if(justDone&&s.d===s.t){celebrate(m);return;}
+  const i=ALL.indexOf(l),nx=ALL[i+1];
+  if(nx&&nx.m===m) go(nx.id); else go(m.id);
+}
+function celebrate(m){
+  confetti(90);
+  const d=document.createElement("div");d.className="celebrate";
+  const nm=MODS[MODS.indexOf(m)+1];
+  d.innerHTML='<div class="card"><div style="font-size:3rem">🌟</div><h2>Module '+m.no+' complete!</h2><p class="muted">'+hon(m.title)+'. Mashallah, every lesson done.</p><button class="btn" id="cq">Try the checkpoint quiz</button>'+(nm?'<button class="btn ghost" id="cn">Go to Module '+nm.no+'</button>':'<button class="btn ghost" id="cn">Back home</button>')+'</div>';
+  document.body.appendChild(d);
+  const close=()=>d.remove();
+  d.querySelector("#cq").onclick=()=>{close();go(m.id);setTimeout(()=>{const q=$("#quiz");if(q)q.scrollIntoView({behavior:"smooth"});},300);};
+  d.querySelector("#cn").onclick=()=>{close();go(nm?nm.id:"");};
+  d.onclick=e=>{if(e.target===d)close();};
+}
+
+/* ================= QUIZ ENGINE ================= */
+function quizInto(el,qs,title,onEnd){
+  let i=0,right=0;
+  function draw(){
+    if(i>=qs.length){const sc=right/qs.length;el.innerHTML='<span class="label">'+esc(title)+'</span><div class="bigscore">'+right+' / '+qs.length+'</div><p class="muted">'+(sc>=.8?"Excellent! You've got this.":sc>=.5?"Good effort. Review the lessons and try again.":"Have another look at the lessons, then try again.")+'</p><div class="row"><button class="btn ghost" id="qa">Try again</button></div>';onEnd&&onEnd(sc);el.querySelector("#qa").onclick=()=>{i=0;right=0;draw();};return;}
+    const q=qs[i];
+    el.innerHTML='<div class="row" style="justify-content:space-between"><span class="label">'+esc(title)+'</span><span class="label">'+(i+1)+' / '+qs.length+'</span></div>'+bar(Math.round(i/qs.length*100),"thin")+'<h3 style="font-size:1.3rem">'+hon(q.q)+'</h3><div class="opts">'+q.o.map((o,j)=>'<button class="opt" data-j="'+j+'">'+hon(o)+'</button>').join("")+'</div><div id="qnext"></div>';
+    animateBars();
+    el.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      const j=+b.dataset.j; el.querySelectorAll(".opt").forEach(o=>o.disabled=true);
+      if(j===q.a){right++;b.classList.add("right");}else{b.classList.add("wrong");el.querySelector('.opt[data-j="'+q.a+'"]').classList.add("right");}
+      el.querySelector("#qnext").innerHTML='<button class="btn" style="margin-top:6px">'+(i+1<qs.length?"Next question →":"See my score")+'</button>';
+      el.querySelector("#qnext button").onclick=()=>{i++;draw();};
+    });
+  }
+  draw();
+}
+
+/* ================= PRACTICE ================= */
+function practiceView(){
+  V().innerHTML='<div class="row" style="padding-top:22px"><button class="link" id="back">‹ Home</button></div><header class="stack" style="gap:6px"><h1 style="font-size:2.4rem">Practice</h1><p class="muted">A few minutes a day makes it stick. Best quiz score: '+S.best+' / 10</p></header>'
+  +'<div class="tabs" role="tablist"><button class="on" data-t="quiz">Quick quiz</button><button data-t="cards">Flashcards</button></div><section class="card stack" id="pbox"></section>';
+  $("#back").onclick=()=>go("");
+  const tabs=V().querySelectorAll(".tabs button");
+  tabs.forEach(t=>t.onclick=()=>{tabs.forEach(x=>x.classList.toggle("on",x===t));t.dataset.t==="quiz"?pQuiz():pCards();});
+  pQuiz(); window.scrollTo({top:0});
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pQuiz(){
+  const started=MODS.filter(m=>mStat(m).d>0);const pool=(started.length?started:MODS.slice(0,1)).flatMap(m=>m.quiz.map(q=>({q:q[0],o:q[1],a:q[2]})));
+  const extra=TEN.map((t,i)=>({q:"Which condition says: “"+t.split(".")[0]+".”",o:null,a:i})).map(z=>{const opts=shuffle([z.a,...shuffle([...Array(10).keys()].filter(k=>k!==z.a)).slice(0,3)]);return {q:z.q,o:opts.map(k=>"Condition "+(k+1)),a:opts.indexOf(z.a)};});
+  const qs=shuffle(pool.concat(S.done["m6c1"]?extra:[])).slice(0,10);
+  quizInto($("#pbox"),qs,"Quick quiz",sc=>{const r=Math.round(sc*qs.length);if(r>S.best){S.best=r;save();}if(sc>=.8)confetti();bump();save();});
+}
+function pCards(){
+  let deck=shuffle(CARDS),i=0;
+  const el=$("#pbox");
+  function draw(){const c=deck[i];
+    el.innerHTML='<div class="row" style="justify-content:space-between"><span class="label">Tap the card to flip</span><span class="label">'+(i+1)+' / '+deck.length+'</span></div><div class="flip" id="fc" tabindex="0" role="button" aria-label="Flip card"><div class="flip-in"><div class="face front"><b>'+hon(c[0])+'</b></div><div class="face back">'+hon(c[1])+'</div></div></div><div class="row" style="justify-content:space-between"><button class="btn ghost" id="fp">‹ Back</button><button class="btn" id="fn">Next ›</button></div>';
+    const f=el.querySelector("#fc");const flip=()=>f.classList.toggle("on");f.onclick=flip;f.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip();}};
+    el.querySelector("#fp").onclick=()=>{i=(i-1+deck.length)%deck.length;draw();};
+    el.querySelector("#fn").onclick=()=>{i=(i+1)%deck.length;if(i===0){deck=shuffle(CARDS);toast("Deck done! Shuffled for another round.");bump();save();}draw();};
+  }
+  draw();
+}
+
+/* ================= BAI'AT ================= */
+function baiatView(){
+  const n=Object.values(S.ten).filter(Boolean).length;
+  V().innerHTML='<div class="row" style="padding-top:22px"><button class="link" id="back">‹ Home</button></div>'
+  +'<header class="stack" style="gap:8px"><h1 style="font-size:clamp(2rem,7vw,2.6rem)">Preparing for Bai\'at</h1><p class="muted">To become an Ahmadi Muslim, a person agrees to these ten conditions, set by the Promised Messiah<sup>as</sup>, and signs a pledge of allegiance to the Khalifa of the time. Here they are in plain words. Tap each one once you understand it.</p></header>'
+  +'<section class="card stack"><div class="row" style="justify-content:space-between"><span class="label">Understood</span><span class="label" id="tn">'+n+' / 10</span></div>'+bar(n*10)+'</section>'
+  +'<ol class="tenlist">'+TEN.map((t,i)=>'<li class="'+(S.ten[i+1]?"on":"")+'"><button class="tenbtn" data-k="'+(i+1)+'" aria-pressed="'+(!!S.ten[i+1])+'" aria-label="Condition '+(i+1)+' understood">'+(S.ten[i+1]?"✓":i+1)+'</button><div><span class="label">Condition '+(i+1)+'</span><div style="font-weight:600">'+hon(t)+'</div></div></li>').join("")+'</ol>'
+  +'<section class="card stack"><h2 style="font-size:1.35rem">When you feel ready</h2><p>Talk to the person who shared this with you, or the missionary at your local mosque. They can answer questions and go through the pledge form with you. There\'s no rush. Module 6 explains every condition in depth.</p><div class="refs">'+[SRC.TEN,SRC.COB].map(refChip).join("")+'</div></section>';
+  $("#back").onclick=()=>go("");
+  V().querySelectorAll(".tenbtn").forEach(b=>b.onclick=()=>{const k=b.dataset.k;S.ten[k]=!S.ten[k];const li=b.closest("li");li.classList.toggle("on",S.ten[k]);b.textContent=S.ten[k]?"✓":k;b.setAttribute("aria-pressed",S.ten[k]);
+    const n=Object.values(S.ten).filter(Boolean).length;$("#tn").textContent=n+" / 10";V().querySelector(".bar i").style.width=n*10+"%";bump();save();if(n===10&&S.ten[k]){confetti();toast("All ten conditions read. Mashallah!");}});
+  animateBars(); window.scrollTo({top:0});
+}
+
+/* ================= ROUTER ================= */
+function route(){
+  document.querySelectorAll(".celebrate").forEach(d=>d.remove());
+  const h=location.hash.slice(1);
+  if(/^m[1-8]$/.test(h))moduleView(h);
+  else if(/^m[1-8]c\d+$/.test(h)&&ALL.find(l=>l.id===h))lessonView(h);
+  else if(h==="practice")practiceView();
+  else if(h==="baiat")baiatView();
+  else home();
+}
+window.addEventListener("hashchange",route);
+
+/* ================= SYNC (Vercel function + Upstash Redis) ================= */
+let meName="";function setHello(){}function renderMentor(){}
+function newId(){const a=new Uint8Array(16);crypto.getRandomValues(a);return Array.from(a,b=>b.toString(16).padStart(2,"0")).join("");}
+const params=new URLSearchParams(location.search);
+let UID=params.get("u");
+try{if(!UID)UID=localStorage.getItem("tp-uid");}catch(e){}
+if(!UID||!/^[a-f0-9]{32}$/.test(UID))UID=newId();
+try{localStorage.setItem("tp-uid",UID);}catch(e){}
+if(params.get("u")!==UID){params.set("u",UID);history.replaceState(null,"",location.pathname+"?"+params.toString()+location.hash);}
+function myLink(){return location.origin+location.pathname+"?u="+UID;}
+function mergeIn(d){
+  if(!d)return;const m=Object.assign(clone(DEF),S);
+  ["done","notes","yq","quiz","ten"].forEach(k=>{m[k]=Object.assign({},d[k]||{},S[k]||{});});
+  Object.keys(d.quiz||{}).forEach(k=>m.quiz[k]=Math.max(d.quiz[k]||0,(S.quiz||{})[k]||0));
+  Object.keys(d.notes||{}).forEach(k=>{if(!S.notes[k])m.notes[k]=d.notes[k];});
+  m.best=Math.max(S.best||0,d.best||0);
+  if(d.streak&&(d.streak.last>S.streak.last||(d.streak.last===S.streak.last&&d.streak.count>S.streak.count)))m.streak=d.streak;
+  S=m;try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
+}
+const API="/api/progress?u="+UID;
+const remote={async get(){const r=await fetch(API,{cache:"no-store"});if(!r.ok)throw new Error(r.status);return r.json();},
+  async set(d){const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});if(!r.ok)throw new Error(r.status);}};
+let ready=false;
+async function pull(){
+  try{const d=await remote.get();cloud=remote;const before=JSON.stringify(S);if(d)mergeIn(d);
+    setSaved("Synced. Open your personal link on any device.",true);
+    if(!d||JSON.stringify(S)!==before){save();if(d&&!/^#?m\d+c\d+$/.test(location.hash))route();}
+  }catch(e){setSaved(location.protocol==="file:"?"Saved on this device only (sync works once it's on Vercel).":"Offline right now. Progress is kept on this device and will sync later.",false);}
+}
+route();
+pull();
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")pull();});
+</script>
+</body>
+</html>
