@@ -194,7 +194,6 @@ footer{margin-top:40px;font-size:.84rem;color:var(--muted);display:grid;gap:6px;
 .celebrate .card{max-width:420px;text-align:center;display:grid;gap:14px;animation:pop .5s}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 </head>
 <body>
 <div class="sky" aria-hidden="true">
@@ -1013,7 +1012,8 @@ const STAR='<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><
 
 /* ================= STATE ================= */
 const DEF={done:{},notes:{},yq:{},quiz:{},ten:{},streak:{last:"",count:0},best:0};
-const LS="tarbiyyat-path-v2";
+let LS="tarbiyyat-path-v2";
+let TOKEN=null,NAME="";try{TOKEN=localStorage.getItem("tp-token");NAME=localStorage.getItem("tp-name")||"";}catch(e){}
 let S=clone(DEF);
 function clone(o){return JSON.parse(JSON.stringify(o));}
 try{const r=localStorage.getItem(LS)||localStorage.getItem("tarbiyyat-path-v1");if(r)S=Object.assign(clone(DEF),JSON.parse(r));}catch(e){}
@@ -1049,7 +1049,7 @@ function animateBars(){requestAnimationFrame(()=>requestAnimationFrame(()=>docum
 function srcLink(k){const s=SRC[k];return s?'<a href="'+s[1]+'" target="_blank" rel="noopener">'+hon(s[0])+'</a>':"";}
 function refChip(r){return '<a class="ref" href="'+r[1]+'" target="_blank" rel="noopener">'+STAR.replace('width="18" height="18"','width="14" height="14"')+hon(r[0])+'</a>';}
 const V=()=>$("#view");
-function go(h){if(location.hash==="#"+h)route();else location.hash=h;}
+function go(h){if(location.hash.slice(1)===h)route();else location.hash=h;}
 
 /* ================= HOME ================= */
 function home(){
@@ -1057,7 +1057,7 @@ function home(){
   const C=2*Math.PI*56,off=C*(1-n/TOTAL);
   const passed=MODS.filter(m=>(S.quiz[m.id]||0)>=.8).length;
   V().innerHTML=
-  '<header class="hero"><div class="bism" lang="ar">بِسۡمِ اللّٰہِ الرَّحۡمٰنِ الرَّحِیۡمِ</div><h1>Tarbiyyat Path</h1><p id="hello">Learn Islam Ahmadiyyat one small lesson at a time. Read the lesson, think about it, tap Done. That\'s it.</p></header>'
+  '<header class="hero"><div class="bism" lang="ar">بِسۡمِ اللّٰہِ الرَّحۡمٰنِ الرَّحِیۡمِ</div><h1>Tarbiyyat Path</h1><p id="hello">'+(NAME?"Assalamo Alaikum, "+esc(NAME.split(" ")[0])+". ":"")+'Learn Islam Ahmadiyyat one small lesson at a time. Read the lesson, think about it, tap Done. That\'s it.</p></header>'
   +'<section class="card stack"><div class="home-top"><div class="ring"><svg viewBox="0 0 132 132"><circle class="track" cx="66" cy="66" r="56" fill="none" stroke-width="14"/><circle class="fill" cx="66" cy="66" r="56" fill="none" stroke-width="14" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+C+'" data-off="'+off+'"/></svg><div class="num"><div><b>'+pct+'%</b><span>'+n+' of '+TOTAL+'</span></div></div></div>'
   +'<div class="stack" style="gap:10px"><h2 style="font-size:1.5rem">'+(n===0?"Ready when you are":nx?"Keep going, you're doing great":"Alhamdulillah, all done!")+'</h2><div class="chips"><span class="chip">🔥 '+S.streak.count+' day streak</span><span class="chip pink">'+passed+' of 8 checkpoints</span><span class="chip mint">'+Object.values(S.ten).filter(Boolean).length+' of 10 conditions</span></div></div></div>'
   +(nx?'<button class="btn big" id="cont">'+(n?"Continue: ":"Start: ")+hon(nx.t)+' →</button><div class="muted" style="text-align:center;font-size:.9rem;margin-top:-6px">Module '+nx.m.no+' · Lesson '+nx.n+' of '+nx.m.lessons.length+'</div>':'')
@@ -1067,13 +1067,9 @@ function home(){
   +MODS.map(m=>{const s=mStat(m),done=s.d===s.t;return '<button class="stone h-'+m.hue+'" data-m="'+m.id+'"><span class="pebble'+(done?" done":"")+'">'+(done?"✓":m.no)+'</span><span class="stone-body"><h3>'+hon(m.title)+'</h3><p>'+hon(m.blurb)+'</p><span class="stone-meta">'+bar(Math.round(s.d/s.t*100),"thin")+'<span>'+(done?"Complete":s.d?s.d+" of "+s.t:s.t+" lessons")+'</span></span></span></button>';}).join("")
   +'<button class="stone h-pink" data-m="baiat"><span class="pebble'+(Object.values(S.ten).filter(Boolean).length===10?" done":"")+'">✦</span><span class="stone-body"><h3>Preparing for Bai\'at</h3><p>The ten conditions in plain words, and what joining involves.</p></span></button>'
   +'</div></section>'
-  +'<section class="card stack"><h2 style="font-size:1.35rem">Use it on your phone and computer</h2><p class="muted">This is your personal link. Open it on any device and your progress follows you. Keep it to yourself, like a key.</p><div class="row" style="align-items:flex-start;gap:18px"><div id="qr" style="background:#fff;border-radius:18px;padding:8px;line-height:0;max-width:100%" aria-label="QR code of your personal link"></div><div class="stack" style="gap:10px;flex:1;min-width:200px"><code id="mylink" style="word-break:break-all;font-size:.85rem;background:var(--card2);padding:10px 12px;border-radius:14px"></code><button class="btn ghost" id="cpy">Copy my link</button><p class="muted" style="font-size:.88rem">On your phone: scan the code with the camera, then add it to your home screen.</p></div></div><details><summary class="link">Started on another device? Paste that link</summary><div class="stack" style="gap:10px;margin-top:10px"><textarea id="codein" style="min-height:60px" placeholder="Paste your personal link here"></textarea><button class="btn" id="codego">Use this link</button></div></details></section>';
+  +'<section class="card stack"><h2 style="font-size:1.35rem">Your account</h2><p class="muted">Signed in as <b>'+esc(NAME)+'</b>. Your progress saves to your account, so on your phone or another computer just sign in with the same name and password.</p><div class="row"><button class="btn ghost" id="signout">Sign out</button></div></section>'
   if(nx)$("#cont").onclick=()=>go(nx.id);
-  $("#mylink").textContent=myLink();
-  try{const q=qrcode(0,"M");q.addData(myLink());q.make();$("#qr").innerHTML=q.createSvgTag({cellSize:4,margin:2});}catch(e){$("#qr").hidden=true;}
-  $("#cpy").onclick=async()=>{try{await navigator.clipboard.writeText(myLink());toast("Link copied.");}catch(e){const r=document.createRange();r.selectNodeContents($("#mylink"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);toast("Link selected. Copy it.");}};
-  $("#codego").onclick=()=>{const m=$("#codein").value.match(/[?&]u=([a-f0-9]{32})/);if(!m){toast("That doesn't look like your link. Copy the whole link and try again.");return;}
-    try{localStorage.setItem("tp-uid",m[1]);}catch(e){}location.href=location.pathname+"?u="+m[1];};
+  $("#signout").onclick=signOut;
   $("#prac").onclick=()=>go("practice");
   V().querySelectorAll(".stone").forEach(b=>b.onclick=()=>go(b.dataset.m));
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const f=V().querySelector(".ring .fill");if(f)f.style.strokeDashoffset=f.dataset.off;}));
@@ -1213,6 +1209,8 @@ function baiatView(){
 function route(){
   document.querySelectorAll(".celebrate").forEach(d=>d.remove());
   const h=location.hash.slice(1);
+  if(h==="mentor")return mentorView();
+  if(!TOKEN)return authView();
   if(/^m[1-8]$/.test(h))moduleView(h);
   else if(/^m[1-8]c\d+$/.test(h)&&ALL.find(l=>l.id===h))lessonView(h);
   else if(h==="practice")practiceView();
@@ -1221,16 +1219,7 @@ function route(){
 }
 window.addEventListener("hashchange",route);
 
-/* ================= SYNC (Vercel function + Upstash Redis) ================= */
-let meName="";function setHello(){}function renderMentor(){}
-function newId(){const a=new Uint8Array(16);crypto.getRandomValues(a);return Array.from(a,b=>b.toString(16).padStart(2,"0")).join("");}
-const params=new URLSearchParams(location.search);
-let UID=params.get("u");
-try{if(!UID)UID=localStorage.getItem("tp-uid");}catch(e){}
-if(!UID||!/^[a-f0-9]{32}$/.test(UID))UID=newId();
-try{localStorage.setItem("tp-uid",UID);}catch(e){}
-if(params.get("u")!==UID){params.set("u",UID);history.replaceState(null,"",location.pathname+"?"+params.toString()+location.hash);}
-function myLink(){return location.origin+location.pathname+"?u="+UID;}
+/* ================= ACCOUNT & SYNC ================= */
 function mergeIn(d){
   if(!d)return;const m=Object.assign(clone(DEF),S);
   ["done","notes","yq","quiz","ten"].forEach(k=>{m[k]=Object.assign({},d[k]||{},S[k]||{});});
@@ -1240,16 +1229,84 @@ function mergeIn(d){
   if(d.streak&&(d.streak.last>S.streak.last||(d.streak.last===S.streak.last&&d.streak.count>S.streak.count)))m.streak=d.streak;
   S=m;try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
 }
-const API="/api/progress?u="+UID;
-const remote={async get(){const r=await fetch(API,{cache:"no-store"});if(!r.ok)throw new Error(r.status);return r.json();},
-  async set(d){const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});if(!r.ok)throw new Error(r.status);}};
-let ready=false;
-async function pull(){
-  try{const d=await remote.get();cloud=remote;const before=JSON.stringify(S);if(d)mergeIn(d);
-    setSaved("Synced. Open your personal link on any device.",true);
-    if(!d||JSON.stringify(S)!==before){save();if(d&&!/^#?m\d+c\d+$/.test(location.hash))route();}
-  }catch(e){setSaved(location.protocol==="file:"?"Saved on this device only (sync works once it's on Vercel).":"Offline right now. Progress is kept on this device and will sync later.",false);}
+const hasAny=o=>o&&["done","yq","ten","notes"].some(k=>Object.keys(o[k]||{}).length);
+async function api(path,opt){
+  opt=opt||{};const h={"Content-Type":"application/json"};if(TOKEN)h.Authorization="Bearer "+TOKEN;
+  const r=await fetch(path,{method:opt.method||"GET",headers:Object.assign(h,opt.headers||{}),body:opt.body?JSON.stringify(opt.body):undefined,cache:"no-store"});
+  let j={};try{j=await r.json();}catch(e){}
+  if(!r.ok){const e=new Error(j.error||"Something went wrong.");e.status=r.status;throw e;}
+  return j;
 }
+const remote={get:()=>api("/api/progress"),set:d=>api("/api/progress",{method:"POST",body:d})};
+function useAccount(){LS="tp-progress:"+NAME.toLowerCase();let c=null;try{c=localStorage.getItem(LS);}catch(e){}S=Object.assign(clone(DEF),c?JSON.parse(c):{});}
+async function pull(){
+  if(!TOKEN)return;
+  try{const r=await remote.get();cloud=remote;const before=JSON.stringify(S);if(r.progress)mergeIn(r.progress);
+    if(r.name&&r.name!==NAME){NAME=r.name;try{localStorage.setItem("tp-name",NAME);}catch(e){}}
+    setSaved("Saved to your account. Sign in on any device to continue.",true);
+    if(!r.progress||JSON.stringify(S)!==before){save();if(r.progress&&!/^#?m\d+c\d+$/.test(location.hash))route();}
+  }catch(e){
+    if(e.status===401){toast("Please sign in again.");localSignOut();return;}
+    setSaved(e.status===503?"Sync isn't set up on the server yet. Progress is kept on this device.":"Offline right now. Progress is kept on this device and will sync later.",false);
+  }
+}
+function localSignOut(){TOKEN=null;NAME="";cloud=null;try{localStorage.removeItem("tp-token");localStorage.removeItem("tp-name");}catch(e){}LS="tarbiyyat-path-v2";S=clone(DEF);go("");}
+async function signOut(){try{await api("/api/auth",{method:"POST",body:{action:"logout"}});}catch(e){}localSignOut();toast("Signed out.");}
+
+function authView(){
+  let mode="signup";
+  V().innerHTML='<header class="hero"><div class="bism" lang="ar">بِسۡمِ اللّٰہِ الرَّحۡمٰنِ الرَّحِیۡمِ</div><h1>Tarbiyyat Path</h1><p>Learn Islam Ahmadiyyat one small lesson at a time, on your phone or computer.</p></header>'
+  +'<section class="card stack" style="max-width:440px;margin:0 auto;width:100%"><div class="tabs" style="margin:0 auto"><button class="on" data-mode="signup" type="button">Create account</button><button data-mode="login" type="button">Sign in</button></div>'
+  +'<form id="authf" class="stack" style="gap:12px" novalidate><label class="stack" style="gap:6px"><span class="label">Your name</span><input id="au-name" autocomplete="username" required maxlength="30" style="font:inherit;padding:14px 16px;border-radius:16px;border:2px solid var(--line);background:var(--card2);color:var(--ink)" placeholder="e.g. Sarah"></label>'
+  +'<label class="stack" style="gap:6px"><span class="label">Password</span><input id="au-pw" type="password" autocomplete="new-password" required minlength="6" style="font:inherit;padding:14px 16px;border-radius:16px;border:2px solid var(--line);background:var(--card2);color:var(--ink)" placeholder="At least 6 characters"></label>'
+  +'<label class="row" style="gap:8px;font-size:.92rem;color:var(--muted)"><input type="checkbox" id="au-show" style="width:18px;height:18px;accent-color:var(--violet)"> Show password</label>'
+  +'<p id="au-err" role="alert" style="color:var(--pink);font-weight:700;min-height:1.2em;margin:0"></p>'
+  +'<button class="btn big" id="au-go" type="submit">Create my account</button>'
+  +'<p class="muted" id="au-hint" style="font-size:.88rem;text-align:center">Pick a name and password you\'ll remember. You\'ll use them to sign in on your phone and computer.</p></form></section>';
+  const tabs=V().querySelectorAll(".tabs button"),go_=$("#au-go"),pw=$("#au-pw");
+  tabs.forEach(t=>t.onclick=()=>{mode=t.dataset.mode;tabs.forEach(x=>x.classList.toggle("on",x===t));go_.textContent=mode==="signup"?"Create my account":"Sign in";pw.autocomplete=mode==="signup"?"new-password":"current-password";
+    $("#au-hint").textContent=mode==="signup"?"Pick a name and password you'll remember. You'll use them to sign in on your phone and computer.":"Forgot your password? Ask the person who shared this with you to reset it.";$("#au-err").textContent="";});
+  $("#au-show").onchange=e=>pw.type=e.target.checked?"text":"password";
+  $("#authf").onsubmit=async e=>{e.preventDefault();const name=$("#au-name").value.trim(),p=pw.value;
+    if(name.length<3){$("#au-err").textContent="Your name needs at least 3 characters.";return;}
+    if(p.length<6){$("#au-err").textContent="Your password needs at least 6 characters.";return;}
+    go_.disabled=true;go_.textContent=mode==="signup"?"Creating…":"Signing in…";$("#au-err").textContent="";
+    try{const r=await api("/api/auth",{method:"POST",body:{action:mode,name,password:p}});
+      const pre=hasAny(S)?clone(S):null;TOKEN=r.token;NAME=r.name;try{localStorage.setItem("tp-token",TOKEN);localStorage.setItem("tp-name",NAME);}catch(e){}
+      useAccount();if(pre){mergeIn(pre);try{localStorage.removeItem("tarbiyyat-path-v2");}catch(e){}}
+      toast(mode==="signup"?"Welcome, "+NAME.split(" ")[0]+"!":"Welcome back, "+NAME.split(" ")[0]+"!");if(mode==="signup")confetti(40);
+      go("");await pull();
+    }catch(err){$("#au-err").textContent=err.status===503?"The site isn't connected to its database yet. Please try again later.":err.message;go_.disabled=false;go_.textContent=mode==="signup"?"Create my account":"Sign in";}
+  };
+  window.scrollTo({top:0});
+}
+
+/* ================= MENTOR ================= */
+function mentorView(){
+  let key="";try{key=sessionStorage.getItem("tp-mkey")||"";}catch(e){}
+  V().innerHTML='<div class="row" style="padding-top:22px"><button class="link" id="back">‹ Home</button></div><header class="stack" style="gap:6px"><h1 style="font-size:2.4rem">Mentor view</h1><p class="muted">See every learner\'s progress and reset forgotten passwords.</p></header><section class="card stack" id="mbox"></section>';
+  $("#back").onclick=()=>go("");
+  const box=$("#mbox");
+  const ask=msg=>{box.innerHTML='<form id="mk" class="stack" style="gap:12px"><label class="stack" style="gap:6px"><span class="label">Mentor key</span><input id="mkey" type="password" autocomplete="off" style="font:inherit;padding:14px 16px;border-radius:16px;border:2px solid var(--line);background:var(--card2);color:var(--ink)"></label><p style="color:var(--pink);font-weight:700;margin:0">'+esc(msg||"")+'</p><button class="btn" type="submit">Open</button></form>';
+    $("#mk").onsubmit=e=>{e.preventDefault();key=$("#mkey").value;try{sessionStorage.setItem("tp-mkey",key);}catch(e){}load();};};
+  const load=async()=>{
+    box.innerHTML='<p class="muted">Loading…</p>';
+    try{const r=await api("/api/mentor",{headers:{"x-mentor-key":key}});
+      const rows=r.learners.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+      box.innerHTML='<div class="tbl"><table><thead><tr><th>Learner</th><th>Progress</th><th>Now on</th><th>Checkpoints</th><th>Conditions</th><th>Last active</th></tr></thead><tbody id="mrows"></tbody></table></div>'
+       +'<form id="rs" class="stack" style="gap:10px;border-top:1px solid var(--line);padding-top:16px"><span class="label">Reset a password</span><div class="row"><input id="rs-n" placeholder="Learner name" style="flex:1;min-width:140px;font:inherit;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--card2);color:var(--ink)"><input id="rs-p" placeholder="New password" style="flex:1;min-width:140px;font:inherit;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--card2);color:var(--ink)"><button class="btn ghost" type="submit">Reset</button></div><p class="muted" style="font-size:.86rem;margin:0">Their progress is kept. They\'ll be signed out and can sign in with the new password.</p></form>';
+      const tb=$("#mrows");
+      if(!rows.length)tb.innerHTML='<tr><td colspan="6" class="muted">No learners yet.</td></tr>';
+      rows.forEach(l=>{const done=new Set(l.done);const cur=ALL.find(x=>!done.has(x.id));const tr=document.createElement("tr");
+        [l.display,Math.round(done.size/TOTAL*100)+"% ("+done.size+"/"+TOTAL+")",cur?"M"+cur.m.no+" · "+cur.t:"Finished",Object.values(l.quiz).filter(v=>v>=.8).length+"/8",l.ten+"/10",l.updatedAt?new Date(l.updatedAt).toLocaleString():"—"].forEach(t=>{const td=document.createElement("td");td.textContent=t;tr.appendChild(td);});tb.appendChild(tr);});
+      $("#rs").onsubmit=async e=>{e.preventDefault();try{await api("/api/mentor",{method:"POST",headers:{"x-mentor-key":key},body:{name:$("#rs-n").value,password:$("#rs-p").value}});toast("Password reset.");$("#rs-p").value="";}catch(err){toast(err.message);}};
+    }catch(err){ask(err.message);}
+  };
+  key?load():ask();
+  window.scrollTo({top:0});
+}
+
+if(TOKEN)useAccount();
 route();
 pull();
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")pull();});
