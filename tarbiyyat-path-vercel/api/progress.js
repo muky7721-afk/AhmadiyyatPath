@@ -1,6 +1,6 @@
 // GET/POST the signed-in learner's progress. Requires "Authorization: Bearer <token>".
 const L = require("./_lib");
-const ALLOWED = ["done", "notes", "yq", "quiz", "ten", "streak", "best", "updatedAt"];
+const ALLOWED = ["done", "notes", "yq", "quiz", "ten", "streak", "best", "muslim", "muslimAt", "updatedAt"];
 
 module.exports = async (req, res) => {
   res.setHeader("Cache-Control", "no-store");

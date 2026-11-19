@@ -104,6 +104,16 @@ button{font:inherit;cursor:pointer;color:inherit}
 .stone:hover .pebble{transform:rotate(-6deg) scale(1.06);border-radius:58% 42% 37% 63% / 56% 59% 41% 44%}
 .h-violet .pebble{background:var(--violet)} .h-pink .pebble{background:var(--pink)} .h-mint .pebble{background:var(--mint)} .h-peach .pebble{background:var(--peach)}
 .pebble.done{background:var(--gold)!important}
+.stone.locked .pebble{background:var(--line)!important;color:var(--muted);box-shadow:none}
+.stone.locked .stone-body{opacity:.62}
+.stone.locked:hover .pebble{transform:none}
+.lrow.quizrow{background:linear-gradient(135deg,var(--violet-soft),var(--pink-soft))}
+.lrow.quizrow .dot{background:var(--pink);color:#fff}
+.lrow.quizrow.done .dot{background:var(--gold)}
+.lrow.quizrow.lockedq{opacity:.6;cursor:default}
+.lrow.quizrow.lockedq:hover{transform:none}
+.lockcard{text-align:center;justify-items:center}
+.lockicon{font-size:2.6rem;line-height:1}
 .stone-body{background:var(--card);border-radius:var(--r-m);padding:14px 18px;box-shadow:var(--shadow-s);display:grid;gap:6px;min-width:0;transition:transform .25s}
 .stone:hover .stone-body{transform:translateX(4px)}
 .stone-body h3{font-size:1.18rem}
@@ -1008,6 +1018,11 @@ const CARDS=[
 MODS.forEach(m=>m.lessons.forEach((l,i)=>{l.n_=l.n;l.id=m.id+"c"+(i+1);l.n=i+1;l.m=m;}));
 const ALL=MODS.flatMap(m=>m.lessons);
 const TOTAL=ALL.length;
+/* "I am already Muslim": these lessons become optional (Module 1 by lesson number; "all" = whole module). */
+const MUSLIM_SKIP={m1:[1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18],m2:"all",m3:"all",m4:"all"};
+function optional(l){if(!S.muslim)return false;const r=MUSLIM_SKIP[l.m.id];return r==="all"||(Array.isArray(r)&&r.includes(l.n));}
+const counted=()=>ALL.filter(l=>!optional(l));
+const total=()=>counted().length;
 const STAR='<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1l3.2 4.9 5.6-.8-.8 5.6L23 12l-3 1.3.8 5.6-5.6-.8L12 23l-3.2-4.9-5.6.8.8-5.6L1 12l3-1.3-.8-5.6 5.6.8z"/></svg>';
 
 /* ================= STATE ================= */
@@ -1033,9 +1048,25 @@ function bump(){const t=ymd(new Date());if(S.streak.last===t)return;const y=new 
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const hon=s=>esc(s).replace(/\((sa|as|ra|rh|aba)\)/g,"<sup>$1</sup>");
-const doneN=()=>ALL.filter(l=>S.done[l.id]).length;
-const mStat=m=>({d:m.lessons.filter(l=>S.done[l.id]).length,t:m.lessons.length});
+const doneN=()=>counted().filter(l=>S.done[l.id]).length;
+const mStat=m=>{const L=m.lessons.filter(l=>!optional(l));if(!L.length)return {d:m.lessons.filter(l=>S.done[l.id]).length,t:m.lessons.length,opt:true};return {d:L.filter(l=>S.done[l.id]).length,t:L.length};};
 const nextLesson=()=>ALL.find(l=>!S.done[l.id]);
+/* ---- module gating: pass a module's checkpoint to unlock the next ---- */
+const PASS=1; /* share of checkpoint questions needed to pass (1 = every answer right) */
+const passed=m=>(S.quiz[m.id]||0)>=PASS||(!!S.muslim&&required(m).length===0);
+const required=m=>m.lessons.filter(l=>!l.x.yq&&!optional(l)); /* Yassarnal runs for months, so it never blocks */
+const quizReady=m=>required(m).every(l=>S.done[l.id]);
+function unlocked(m){const i=MODS.indexOf(m);if(i===0)return true;const p=MODS[i-1];return passed(p)||m.lessons.some(l=>S.done[l.id]);}
+function nextStep(){
+  for(const m of MODS){
+    if(!unlocked(m))return null;
+    const l=required(m).find(x=>!S.done[x.id]);
+    if(l)return {type:"lesson",l,m};
+    if(!passed(m))return {type:"quiz",m};
+  }
+  const y=ALL.find(l=>l.x.yq&&!S.done[l.id]&&!optional(l));
+  return y?{type:"lesson",l:y,m:y.m}:null;
+}
 function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("show"),2300);}
 function confetti(n=46){
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
@@ -1053,23 +1084,29 @@ function go(h){if(location.hash.slice(1)===h)route();else location.hash=h;}
 
 /* ================= HOME ================= */
 function home(){
-  const n=doneN(),pct=Math.round(n/TOTAL*100),nx=nextLesson();
-  const C=2*Math.PI*56,off=C*(1-n/TOTAL);
-  const passed=MODS.filter(m=>(S.quiz[m.id]||0)>=.8).length;
+  const n=doneN(),TT=total(),pct=Math.round(n/TT*100),nx=nextStep();
+  const C=2*Math.PI*56,off=C*(1-n/TT);
+  const npass=MODS.filter(passed).length;
   V().innerHTML=
   '<header class="hero"><div class="bism" lang="ar">بِسۡمِ اللّٰہِ الرَّحۡمٰنِ الرَّحِیۡمِ</div><h1>Tarbiyyat Path</h1><p id="hello">'+(NAME?"Assalamo Alaikum, "+esc(NAME.split(" ")[0])+". ":"")+'Learn Islam Ahmadiyyat one small lesson at a time. Read the lesson, think about it, tap Done. That\'s it.</p></header>'
-  +'<section class="card stack"><div class="home-top"><div class="ring"><svg viewBox="0 0 132 132"><circle class="track" cx="66" cy="66" r="56" fill="none" stroke-width="14"/><circle class="fill" cx="66" cy="66" r="56" fill="none" stroke-width="14" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+C+'" data-off="'+off+'"/></svg><div class="num"><div><b>'+pct+'%</b><span>'+n+' of '+TOTAL+'</span></div></div></div>'
-  +'<div class="stack" style="gap:10px"><h2 style="font-size:1.5rem">'+(n===0?"Ready when you are":nx?"Keep going, you're doing great":"Alhamdulillah, all done!")+'</h2><div class="chips"><span class="chip">🔥 '+S.streak.count+' day streak</span><span class="chip pink">'+passed+' of 8 checkpoints</span><span class="chip mint">'+Object.values(S.ten).filter(Boolean).length+' of 10 conditions</span></div></div></div>'
-  +(nx?'<button class="btn big" id="cont">'+(n?"Continue: ":"Start: ")+hon(nx.t)+' →</button><div class="muted" style="text-align:center;font-size:.9rem;margin-top:-6px">Module '+nx.m.no+' · Lesson '+nx.n+' of '+nx.m.lessons.length+'</div>':'')
+  +'<section class="card stack"><div class="home-top"><div class="ring"><svg viewBox="0 0 132 132"><circle class="track" cx="66" cy="66" r="56" fill="none" stroke-width="14"/><circle class="fill" cx="66" cy="66" r="56" fill="none" stroke-width="14" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+C+'" data-off="'+off+'"/></svg><div class="num"><div><b>'+pct+'%</b><span>'+n+' of '+TT+'</span></div></div></div>'
+  +'<div class="stack" style="gap:10px"><h2 style="font-size:1.5rem">'+(n===0?"Ready when you are":nx?"Keep going, you're doing great":"Alhamdulillah, all done!")+'</h2><div class="chips"><span class="chip">🔥 '+S.streak.count+' day streak</span><span class="chip pink">'+npass+' of 8 checkpoints</span><span class="chip mint">'+Object.values(S.ten).filter(Boolean).length+' of 10 conditions</span></div></div></div>'
+  +(nx?(nx.type==="quiz"
+      ?'<button class="btn big pink" id="cont">Take the Module '+nx.m.no+' checkpoint →</button><div class="muted" style="text-align:center;font-size:.9rem;margin-top:-6px">'+(MODS[nx.m.no]?'Pass it to unlock Module '+(nx.m.no+1)+': '+hon(MODS[nx.m.no].title):'The final checkpoint')+'</div>'
+      :'<button class="btn big" id="cont">'+(n?"Continue: ":"Start: ")+hon(nx.l.t)+' →</button><div class="muted" style="text-align:center;font-size:.9rem;margin-top:-6px">Module '+nx.m.no+' · Lesson '+nx.l.n+' of '+nx.m.lessons.length+'</div>'):'')
   +'<div style="text-align:center"><span id="syncline" class="chip '+(synced?'mint':'peach')+'">'+(synced?'✓ ':'')+esc(syncMsg)+'</span></div></section>'
   +'<section class="card stack" style="background:linear-gradient(135deg,var(--violet-soft),var(--pink-soft))"><div class="row" style="justify-content:space-between"><div><h2 style="font-size:1.35rem">Practice</h2><p class="muted">Quick quizzes and flashcards to help it stick.</p></div><button class="btn pink" id="prac">Practise</button></div></section>'
   +'<section class="stack"><h2 style="font-size:1.6rem;padding-top:10px">Your journey</h2><div class="path">'
-  +MODS.map(m=>{const s=mStat(m),done=s.d===s.t;return '<button class="stone h-'+m.hue+'" data-m="'+m.id+'"><span class="pebble'+(done?" done":"")+'">'+(done?"✓":m.no)+'</span><span class="stone-body"><h3>'+hon(m.title)+'</h3><p>'+hon(m.blurb)+'</p><span class="stone-meta">'+bar(Math.round(s.d/s.t*100),"thin")+'<span>'+(done?"Complete":s.d?s.d+" of "+s.t:s.t+" lessons")+'</span></span></span></button>';}).join("")
+  +MODS.map((m,i)=>{const s=mStat(m),ok=unlocked(m);let done=passed(m)&&quizReady(m);if(s.opt)done=false;
+    const meta=s.opt?'Optional for you · open any time':!ok?'🔒 Pass the Module '+i+' checkpoint to unlock':done?'Complete · checkpoint passed':quizReady(m)?'Lessons done · checkpoint next':s.d?s.d+' of '+s.t+' lessons':s.t+' lessons + checkpoint';
+    return '<button class="stone h-'+m.hue+(ok?'':' locked')+'" data-m="'+m.id+'"><span class="pebble'+(done?" done":"")+'">'+(!ok?'🔒':done?"✓":m.no)+'</span><span class="stone-body"><h3>'+hon(m.title)+'</h3><p>'+hon(m.blurb)+'</p><span class="stone-meta">'+bar(Math.round(s.d/s.t*100),"thin")+'<span>'+meta+'</span></span></span></button>';}).join("")
   +'<button class="stone h-pink" data-m="baiat"><span class="pebble'+(Object.values(S.ten).filter(Boolean).length===10?" done":"")+'">✦</span><span class="stone-body"><h3>Preparing for Bai\'at</h3><p>The ten conditions in plain words, and what joining involves.</p></span></button>'
   +'</div></section>'
+  +'<section class="card stack"><label class="row" for="muslim" style="gap:12px;align-items:flex-start;flex-wrap:nowrap;cursor:pointer"><input type="checkbox" id="muslim"'+(S.muslim?" checked":"")+' style="width:22px;height:22px;margin-top:3px;flex:none;accent-color:var(--violet,var(--green))"><span><b>I am already Muslim</b><br><span class="muted" style="font-size:.92rem">Skips the general Islam basics you already know: prayer, Qur\'an reading, the last ten Surahs and the general lessons in Module 1. Everything about Ahmadiyyat, the Holy Prophet<sup>sa</sup>, the Promised Messiah<sup>as</sup> and Khilafat stays in. Skipped lessons stay open if you want them.</span></span></label></section>'
   +'<section class="card stack"><h2 style="font-size:1.35rem">Your account</h2><p class="muted">Signed in as <b>'+esc(NAME)+'</b>. Your progress saves to your account, so on your phone or another computer just sign in with the same name and password.</p><div class="row"><button class="btn ghost" id="signout">Sign out</button></div></section>'
-  if(nx)$("#cont").onclick=()=>go(nx.id);
+  if(nx)$("#cont").onclick=()=>go(nx.type==="quiz"?nx.m.id+"quiz":nx.l.id);
   $("#signout").onclick=signOut;
+  $("#muslim").onchange=e=>{S.muslim=e.target.checked;S.muslimAt=Date.now();save();home();toast(S.muslim?"Basics marked optional. Your course is now "+total()+" lessons.":"Full course restored: "+total()+" lessons.");};
   $("#prac").onclick=()=>go("practice");
   V().querySelectorAll(".stone").forEach(b=>b.onclick=()=>go(b.dataset.m));
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const f=V().querySelector(".ring .fill");if(f)f.style.strokeDashoffset=f.dataset.off;}));
@@ -1077,23 +1114,69 @@ function home(){
 }
 
 /* ================= MODULE ================= */
-function moduleView(id){
-  const m=MODS.find(x=>x.id===id);const s=mStat(m);const nx=m.lessons.find(l=>!S.done[l.id]);
+function lockedView(m){
+  const p=MODS[MODS.indexOf(m)-1];
   V().innerHTML='<div class="row" style="padding-top:22px"><button class="link" id="back">‹ Home</button></div>'
-  +'<section class="mhead h-'+m.hue+'"><span class="pebble'+(s.d===s.t?" done":"")+'">'+(s.d===s.t?"✓":m.no)+'</span><div class="stack" style="gap:6px"><span class="label">Module '+m.no+'</span><h2 style="font-size:clamp(1.7rem,6vw,2.2rem);line-height:1.1">'+hon(m.title)+'</h2></div></section>'
-  +'<section class="card stack"><p>'+hon(m.blurb)+'</p>'+bar(Math.round(s.d/s.t*100))+'<div class="row" style="justify-content:space-between"><span class="muted" style="font-weight:700">'+s.d+' of '+s.t+' lessons done</span>'+(nx?'<button class="btn" id="mgo">'+(s.d?"Continue":"Start")+' →</button>':'<button class="btn pink" id="mq">Take the checkpoint</button>')+'</div></section>'
-  +'<section class="lessons">'+m.lessons.map(l=>'<button class="lrow'+(S.done[l.id]?" done":"")+(nx===l?" next":"")+'" data-l="'+l.id+'"><span class="dot">'+(S.done[l.id]?"✓":l.n)+'</span><span class="t">'+hon(l.t)+'</span><span class="go">›</span></button>').join("")+'</section>'
-  +'<section class="card stack" id="quiz"></section>';
+  +'<section class="card stack lockcard"><div class="lockicon">🔒</div><span class="label">Module '+m.no+'</span><h2 style="font-size:1.8rem">'+hon(m.title)+'</h2>'
+  +'<p class="muted" style="max-width:40ch">This module unlocks when you pass the Module '+p.no+' checkpoint. '+(quizReady(p)?"You've finished its lessons, so you're ready to try it.":"Finish the Module "+p.no+" lessons first, then take its checkpoint.")+'</p>'
+  +'<button class="btn" id="lgo">'+(quizReady(p)?'Take the Module '+p.no+' checkpoint →':'Go to Module '+p.no+' →')+'</button></section>';
   $("#back").onclick=()=>go("");
-  if(nx)$("#mgo").onclick=()=>go(nx.id); else $("#mq").onclick=()=>$("#quiz").scrollIntoView({behavior:"smooth"});
+  $("#lgo").onclick=()=>go(quizReady(p)?p.id+"quiz":p.id);
+  window.scrollTo({top:0});
+}
+function moduleView(id){
+  const m=MODS.find(x=>x.id===id);
+  if(!unlocked(m))return lockedView(m);
+  const s=mStat(m);const nx=required(m).find(l=>!S.done[l.id]);const ready=quizReady(m),ok=passed(m);
+  const nm=MODS.slice(m.no).find(x=>!mStat(x).opt)||MODS[m.no];
+  V().innerHTML='<div class="row" style="padding-top:22px"><button class="link" id="back">‹ Home</button></div>'
+  +'<section class="mhead h-'+m.hue+'"><span class="pebble'+(ok&&ready?" done":"")+'">'+(ok&&ready?"✓":m.no)+'</span><div class="stack" style="gap:6px"><span class="label">Module '+m.no+'</span><h2 style="font-size:clamp(1.7rem,6vw,2.2rem);line-height:1.1">'+hon(m.title)+'</h2></div></section>'
+  +'<section class="card stack"><p>'+hon(m.blurb)+'</p>'+bar(Math.round(s.d/s.t*100))+'<div class="row" style="justify-content:space-between"><span class="muted" style="font-weight:700">'+s.d+' of '+s.t+' lessons done'+(ok?' · checkpoint passed':'')+'</span>'
+  +(nx?'<button class="btn" id="mgo">'+(s.d?"Continue":"Start")+' →</button>':!ok?'<button class="btn pink" id="mq">Take the checkpoint →</button>':nm?'<button class="btn" id="mn">Go to Module '+nm.no+' →</button>':'')+'</div>'
+  +(!ok&&nm?'<p class="muted" style="font-size:.9rem">Finish the lessons, then pass the checkpoint quiz to unlock Module '+nm.no+'.</p>':'')+'</section>'
+  +'<section class="lessons">'+m.lessons.map(l=>'<button class="lrow'+(S.done[l.id]?" done":"")+(nx===l?" next":"")+'" data-l="'+l.id+'"><span class="dot">'+(S.done[l.id]?"✓":l.n)+'</span><span class="t">'+hon(l.t)+(optional(l)?' <span class="muted" style="font-weight:600;font-size:.85rem">· optional for you</span>':'')+(l.x.yq&&!optional(l)?' <span class="muted" style="font-weight:600;font-size:.85rem">· at your own pace, doesn\'t block the checkpoint</span>':'')+'</span><span class="go">›</span></button>').join("")
+  +'<button class="lrow quizrow'+(ok?" done":"")+(ready?"":" lockedq")+(!nx&&!ok?" next":"")+'" id="qrow"><span class="dot">'+(ok?"✓":ready?"★":"🔒")+'</span><span class="t">Checkpoint quiz<br><span class="muted" style="font-weight:600;font-size:.88rem">'+(ok?"Passed":ready?"Get every answer right to unlock "+(nm?"Module "+nm.no:"the finish"):"Unlocks when the lessons are done")+'</span></span><span class="go">›</span></button></section>';
+  $("#back").onclick=()=>go("");
+  if($("#mgo"))$("#mgo").onclick=()=>go(nx.id);
+  if($("#mq"))$("#mq").onclick=()=>go(m.id+"quiz");
+  if($("#mn"))$("#mn").onclick=()=>go(nm.id);
   V().querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>go(b.dataset.l));
-  quizInto($("#quiz"),m.quiz.map(q=>({q:q[0],o:q[1],a:q[2]})),"Module "+m.no+" checkpoint",sc=>{if(sc>(S.quiz[m.id]||0)){S.quiz[m.id]=sc;bump();save();}if(sc>=.8){confetti();toast("Checkpoint passed!");}});
+  $("#qrow").onclick=()=>{if(ready)go(m.id+"quiz");else toast("Finish the lessons above first.");};
   animateBars(); window.scrollTo({top:0});
+}
+function buildQuiz(m){
+  return shuffle(m.quiz).map(q=>{const idx=shuffle(q[1].map((_,j)=>j));return {q:q[0],o:idx.map(j=>q[1][j]),a:idx.indexOf(q[2])};});
+}
+function quizView(id){
+  const m=MODS.find(x=>x.id===id);
+  if(!unlocked(m))return lockedView(m);
+  if(!quizReady(m)){go(m.id);toast("Finish the lessons first, then take the checkpoint.");return;}
+  const nm=MODS[m.no];
+  V().innerHTML='<div class="crumbs" style="padding-top:22px"><button class="link" id="back">‹ '+hon(m.title)+'</button><span class="label">Checkpoint</span></div>'
+  +'<header class="stack" style="gap:6px"><h1 class="lesson-title">Module '+m.no+' checkpoint</h1><p class="muted">'+m.quiz.length+' questions. '+(passed(m)?"You've already passed this one. Try it again any time.":"Get every answer right to unlock "+(nm?"Module "+nm.no+": "+hon(nm.title):"the end of the syllabus")+". You can try as many times as you like.")+'</p></header>'
+  +'<section class="card stack" id="quiz"></section>';
+  $("#back").onclick=()=>go(m.id);
+  const wasPassed=passed(m);
+  quizInto($("#quiz"),()=>buildQuiz(m),"Module "+m.no+" checkpoint",sc=>{
+    if(sc>(S.quiz[m.id]||0)){S.quiz[m.id]=sc;}bump();save();
+    if(sc>=PASS&&!wasPassed)setTimeout(()=>unlockCelebrate(m),350);
+  },{pass:PASS,passMsg:nm?"Module "+nm.no+" is unlocked.":"Every checkpoint passed!",failMsg:"Not quite. You need every answer right to unlock "+(nm?"Module "+nm.no:"the finish")+". Look back at the lessons, then try again. The questions shuffle each time.",review:()=>go(m.id)});
+  window.scrollTo({top:0});
+}
+function unlockCelebrate(m){
+  confetti(110);
+  const nm=MODS[m.no];
+  const d=document.createElement("div");d.className="celebrate";
+  d.innerHTML='<div class="card"><div style="font-size:3rem">'+(nm?"🔓":"🌟")+'</div><h2>'+(nm?"Module "+nm.no+" unlocked!":"Syllabus complete!")+'</h2><p class="muted">'+(nm?"You passed the Module "+m.no+" checkpoint. Next up: "+hon(nm.title)+".":"Mashallah! You passed every checkpoint. When you feel ready, look at Preparing for Bai'at.")+'</p><button class="btn" id="cn">'+(nm?"Start Module "+nm.no+" →":"Preparing for Bai'at →")+'</button><button class="btn ghost" id="ch">Back home</button></div>';
+  document.body.appendChild(d);
+  d.querySelector("#cn").onclick=()=>{d.remove();go(nm?nm.id:"baiat");};
+  d.querySelector("#ch").onclick=()=>{d.remove();go("");};
+  d.onclick=e=>{if(e.target===d)d.remove();};
 }
 
 /* ================= LESSON ================= */
 function lessonView(id){
-  const l=ALL.find(x=>x.id===id);const m=l.m;const s=mStat(m);const done=!!S.done[l.id];const x=l.x;
+  const l=ALL.find(x=>x.id===id);const m=l.m;if(!unlocked(m))return lockedView(m);const s=mStat(m);const done=!!S.done[l.id];const x=l.x;
   let h='<div class="crumbs" style="padding-top:22px"><button class="link" id="back">‹ '+hon(m.title)+'</button><span class="label">Lesson '+l.n+' of '+m.lessons.length+'</span></div>'
   +'<div>'+bar(Math.round(s.d/s.t*100),"thin")+'</div>'
   +'<h1 class="lesson-title">'+hon(l.t)+'</h1>';
@@ -1119,7 +1202,7 @@ function lessonView(id){
   if($("#skipnext"))$("#skipnext").onclick=()=>advance(l);
   if($("#done"))$("#done").onclick=()=>{
     const was=done; S.done[l.id]=true; bump(); save();
-    if(!was){confetti(28);toast("Lesson done · "+doneN()+" of "+TOTAL);}
+    if(!was){confetti(28);toast("Lesson done · "+doneN()+" of "+total());}
     advance(l,!was);
   };
   V().querySelectorAll("[data-y]").forEach(b=>b.onclick=()=>{const k=b.dataset.y;S.yq[k]=!S.yq[k];b.classList.toggle("on",S.yq[k]);b.setAttribute("aria-pressed",S.yq[k]);
@@ -1128,28 +1211,36 @@ function lessonView(id){
   animateBars(); window.scrollTo({top:0});
 }
 function advance(l,justDone){
-  const m=l.m,s=mStat(m);
-  if(justDone&&s.d===s.t){celebrate(m);return;}
-  const i=ALL.indexOf(l),nx=ALL[i+1];
-  if(nx&&nx.m===m) go(nx.id); else go(m.id);
+  const m=l.m;
+  if(justDone&&!l.x.yq&&quizReady(m)&&!passed(m)){celebrate(m);return;}
+  const rest=m.lessons.slice(m.lessons.indexOf(l)+1).find(x=>!S.done[x.id]&&!x.x.yq&&!optional(x))||m.lessons[m.lessons.indexOf(l)+1];
+  if(rest&&!(quizReady(m)&&rest.x.yq&&!passed(m)))go(rest.id);
+  else if(quizReady(m)&&!passed(m))go(m.id+"quiz");
+  else go(m.id);
 }
 function celebrate(m){
   confetti(90);
+  const nm=MODS[m.no];
   const d=document.createElement("div");d.className="celebrate";
-  const nm=MODS[MODS.indexOf(m)+1];
-  d.innerHTML='<div class="card"><div style="font-size:3rem">🌟</div><h2>Module '+m.no+' complete!</h2><p class="muted">'+hon(m.title)+'. Mashallah, every lesson done.</p><button class="btn" id="cq">Try the checkpoint quiz</button>'+(nm?'<button class="btn ghost" id="cn">Go to Module '+nm.no+'</button>':'<button class="btn ghost" id="cn">Back home</button>')+'</div>';
+  d.innerHTML='<div class="card"><div style="font-size:3rem">🌟</div><h2>Lessons complete!</h2><p class="muted">You\'ve finished the '+hon(m.title)+' lessons. One last step: pass the checkpoint quiz'+(nm?' to unlock Module '+nm.no+'.':'.')+'</p><button class="btn pink" id="cq">Take the checkpoint →</button><button class="btn ghost" id="cn">Later</button></div>';
   document.body.appendChild(d);
-  const close=()=>d.remove();
-  d.querySelector("#cq").onclick=()=>{close();go(m.id);setTimeout(()=>{const q=$("#quiz");if(q)q.scrollIntoView({behavior:"smooth"});},300);};
-  d.querySelector("#cn").onclick=()=>{close();go(nm?nm.id:"");};
-  d.onclick=e=>{if(e.target===d)close();};
+  d.querySelector("#cq").onclick=()=>{d.remove();go(m.id+"quiz");};
+  d.querySelector("#cn").onclick=()=>{d.remove();go(m.id);};
+  d.onclick=e=>{if(e.target===d)d.remove();};
 }
 
 /* ================= QUIZ ENGINE ================= */
-function quizInto(el,qs,title,onEnd){
-  let i=0,right=0;
+function quizInto(el,src,title,onEnd,opt){
+  opt=opt||{};const make=typeof src==="function"?src:()=>src;
+  let qs=make(),i=0,right=0;
   function draw(){
-    if(i>=qs.length){const sc=right/qs.length;el.innerHTML='<span class="label">'+esc(title)+'</span><div class="bigscore">'+right+' / '+qs.length+'</div><p class="muted">'+(sc>=.8?"Excellent! You've got this.":sc>=.5?"Good effort. Review the lessons and try again.":"Have another look at the lessons, then try again.")+'</p><div class="row"><button class="btn ghost" id="qa">Try again</button></div>';onEnd&&onEnd(sc);el.querySelector("#qa").onclick=()=>{i=0;right=0;draw();};return;}
+    if(i>=qs.length){const sc=right/qs.length;const pass=opt.pass!=null?sc>=opt.pass:sc>=.8;
+      const msg=opt.pass!=null?(pass?opt.passMsg:opt.failMsg):(sc>=.8?"Excellent! You've got this.":sc>=.5?"Good effort. Review the lessons and try again.":"Have another look at the lessons, then try again.");
+      el.innerHTML='<span class="label">'+esc(title)+'</span><div class="bigscore">'+right+' / '+qs.length+'</div>'+(opt.pass!=null?'<span class="chip '+(pass?"mint":"pink")+'" style="width:max-content">'+(pass?"✓ Passed":"Not passed yet")+'</span>':'')+'<p class="muted">'+hon(msg)+'</p><div class="row">'+(opt.review&&!pass?'<button class="btn ghost" id="qr">Review the lessons</button>':'')+'<button class="btn'+(pass?" ghost":"")+'" id="qa">Try again</button></div>';
+      onEnd&&onEnd(sc);
+      el.querySelector("#qa").onclick=()=>{qs=make();i=0;right=0;draw();};
+      if(el.querySelector("#qr"))el.querySelector("#qr").onclick=opt.review;
+      return;}
     const q=qs[i];
     el.innerHTML='<div class="row" style="justify-content:space-between"><span class="label">'+esc(title)+'</span><span class="label">'+(i+1)+' / '+qs.length+'</span></div>'+bar(Math.round(i/qs.length*100),"thin")+'<h3 style="font-size:1.3rem">'+hon(q.q)+'</h3><div class="opts">'+q.o.map((o,j)=>'<button class="opt" data-j="'+j+'">'+hon(o)+'</button>').join("")+'</div><div id="qnext"></div>';
     animateBars();
@@ -1174,7 +1265,7 @@ function practiceView(){
 }
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function pQuiz(){
-  const started=MODS.filter(m=>mStat(m).d>0);const pool=(started.length?started:MODS.slice(0,1)).flatMap(m=>m.quiz.map(q=>({q:q[0],o:q[1],a:q[2]})));
+  const started=MODS.filter(m=>unlocked(m)&&mStat(m).d>0);const pool=(started.length?started:MODS.slice(0,1)).flatMap(m=>m.quiz.map(q=>({q:q[0],o:q[1],a:q[2]})));
   const extra=TEN.map((t,i)=>({q:"Which condition says: “"+t.split(".")[0]+".”",o:null,a:i})).map(z=>{const opts=shuffle([z.a,...shuffle([...Array(10).keys()].filter(k=>k!==z.a)).slice(0,3)]);return {q:z.q,o:opts.map(k=>"Condition "+(k+1)),a:opts.indexOf(z.a)};});
   const qs=shuffle(pool.concat(S.done["m6c1"]?extra:[])).slice(0,10);
   quizInto($("#pbox"),qs,"Quick quiz",sc=>{const r=Math.round(sc*qs.length);if(r>S.best){S.best=r;save();}if(sc>=.8)confetti();bump();save();});
@@ -1212,6 +1303,7 @@ function route(){
   if(h==="mentor")return mentorView();
   if(!TOKEN)return authView();
   if(/^m[1-8]$/.test(h))moduleView(h);
+  else if(/^m[1-8]quiz$/.test(h))quizView(h.slice(0,2));
   else if(/^m[1-8]c\d+$/.test(h)&&ALL.find(l=>l.id===h))lessonView(h);
   else if(h==="practice")practiceView();
   else if(h==="baiat")baiatView();
@@ -1223,6 +1315,7 @@ window.addEventListener("hashchange",route);
 function mergeIn(d){
   if(!d)return;const m=Object.assign(clone(DEF),S);
   ["done","notes","yq","quiz","ten"].forEach(k=>{m[k]=Object.assign({},d[k]||{},S[k]||{});});
+  if((d.muslimAt||0)>(S.muslimAt||0)){m.muslim=!!d.muslim;m.muslimAt=d.muslimAt;}
   Object.keys(d.quiz||{}).forEach(k=>m.quiz[k]=Math.max(d.quiz[k]||0,(S.quiz||{})[k]||0));
   Object.keys(d.notes||{}).forEach(k=>{if(!S.notes[k])m.notes[k]=d.notes[k];});
   m.best=Math.max(S.best||0,d.best||0);
@@ -1260,11 +1353,12 @@ function authView(){
   +'<form id="authf" class="stack" style="gap:12px" novalidate><label class="stack" style="gap:6px"><span class="label">Your name</span><input id="au-name" autocomplete="username" required maxlength="30" style="font:inherit;padding:14px 16px;border-radius:16px;border:2px solid var(--line);background:var(--card2);color:var(--ink)" placeholder="e.g. Sarah"></label>'
   +'<label class="stack" style="gap:6px"><span class="label">Password</span><input id="au-pw" type="password" autocomplete="new-password" required minlength="6" style="font:inherit;padding:14px 16px;border-radius:16px;border:2px solid var(--line);background:var(--card2);color:var(--ink)" placeholder="At least 6 characters"></label>'
   +'<label class="row" style="gap:8px;font-size:.92rem;color:var(--muted)"><input type="checkbox" id="au-show" style="width:18px;height:18px;accent-color:var(--violet)"> Show password</label>'
+  +'<label class="row" id="au-mus" style="gap:8px;font-size:.92rem;flex-wrap:nowrap;align-items:flex-start"><input type="checkbox" id="au-muslim" style="width:18px;height:18px;margin-top:3px;flex:none;accent-color:var(--violet,var(--green))"><span><b>I am already Muslim</b> <span class="muted">(skip the general Islam basics)</span></span></label>'
   +'<p id="au-err" role="alert" style="color:var(--pink);font-weight:700;min-height:1.2em;margin:0"></p>'
   +'<button class="btn big" id="au-go" type="submit">Create my account</button>'
   +'<p class="muted" id="au-hint" style="font-size:.88rem;text-align:center">Pick a name and password you\'ll remember. You\'ll use them to sign in on your phone and computer.</p></form></section>';
   const tabs=V().querySelectorAll(".tabs button"),go_=$("#au-go"),pw=$("#au-pw");
-  tabs.forEach(t=>t.onclick=()=>{mode=t.dataset.mode;tabs.forEach(x=>x.classList.toggle("on",x===t));go_.textContent=mode==="signup"?"Create my account":"Sign in";pw.autocomplete=mode==="signup"?"new-password":"current-password";
+  tabs.forEach(t=>t.onclick=()=>{mode=t.dataset.mode;tabs.forEach(x=>x.classList.toggle("on",x===t));go_.textContent=mode==="signup"?"Create my account":"Sign in";$("#au-mus").hidden=mode!=="signup";pw.autocomplete=mode==="signup"?"new-password":"current-password";
     $("#au-hint").textContent=mode==="signup"?"Pick a name and password you'll remember. You'll use them to sign in on your phone and computer.":"Forgot your password? Ask the person who shared this with you to reset it.";$("#au-err").textContent="";});
   $("#au-show").onchange=e=>pw.type=e.target.checked?"text":"password";
   $("#authf").onsubmit=async e=>{e.preventDefault();const name=$("#au-name").value.trim(),p=pw.value;
@@ -1273,7 +1367,7 @@ function authView(){
     go_.disabled=true;go_.textContent=mode==="signup"?"Creating…":"Signing in…";$("#au-err").textContent="";
     try{const r=await api("/api/auth",{method:"POST",body:{action:mode,name,password:p}});
       const pre=hasAny(S)?clone(S):null;TOKEN=r.token;NAME=r.name;try{localStorage.setItem("tp-token",TOKEN);localStorage.setItem("tp-name",NAME);}catch(e){}
-      useAccount();if(pre){mergeIn(pre);try{localStorage.removeItem("tarbiyyat-path-v2");}catch(e){}}
+      const wantMuslim=mode==="signup"&&$("#au-muslim").checked;useAccount();if(wantMuslim){S.muslim=true;S.muslimAt=Date.now();}if(pre){mergeIn(pre);try{localStorage.removeItem("tarbiyyat-path-v2");}catch(e){}}
       toast(mode==="signup"?"Welcome, "+NAME.split(" ")[0]+"!":"Welcome back, "+NAME.split(" ")[0]+"!");if(mode==="signup")confetti(40);
       go("");await pull();
     }catch(err){$("#au-err").textContent=err.status===503?"The site isn't connected to its database yet. Please try again later.":err.message;go_.disabled=false;go_.textContent=mode==="signup"?"Create my account":"Sign in";}
@@ -1298,7 +1392,7 @@ function mentorView(){
       const tb=$("#mrows");
       if(!rows.length)tb.innerHTML='<tr><td colspan="6" class="muted">No learners yet.</td></tr>';
       rows.forEach(l=>{const done=new Set(l.done);const cur=ALL.find(x=>!done.has(x.id));const tr=document.createElement("tr");
-        [l.display,Math.round(done.size/TOTAL*100)+"% ("+done.size+"/"+TOTAL+")",cur?"M"+cur.m.no+" · "+cur.t:"Finished",Object.values(l.quiz).filter(v=>v>=.8).length+"/8",l.ten+"/10",l.updatedAt?new Date(l.updatedAt).toLocaleString():"—"].forEach(t=>{const td=document.createElement("td");td.textContent=t;tr.appendChild(td);});tb.appendChild(tr);});
+        [l.display,Math.round(done.size/TOTAL*100)+"% ("+done.size+"/"+TOTAL+")",cur?"M"+cur.m.no+" · "+cur.t:"Finished",Object.values(l.quiz).filter(v=>v>=PASS).length+"/8",l.ten+"/10",l.updatedAt?new Date(l.updatedAt).toLocaleString():"—"].forEach(t=>{const td=document.createElement("td");td.textContent=t;tr.appendChild(td);});tb.appendChild(tr);});
       $("#rs").onsubmit=async e=>{e.preventDefault();try{await api("/api/mentor",{method:"POST",headers:{"x-mentor-key":key},body:{name:$("#rs-n").value,password:$("#rs-p").value}});toast("Password reset.");$("#rs-p").value="";}catch(err){toast(err.message);}};
     }catch(err){ask(err.message);}
   };
